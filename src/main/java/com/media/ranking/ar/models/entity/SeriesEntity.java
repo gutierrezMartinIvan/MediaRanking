@@ -2,7 +2,7 @@ package com.media.ranking.ar.models.entity;
 
 import java.util.List;
 
-public class Series {
+public class SeriesEntity {
     long id;
     String title;
     String description;
