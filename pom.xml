@@ -8,8 +8,8 @@
 		<version>3.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.media.ranking</groupId>
-	<artifactId>ar</artifactId>
+	<groupId>ar.com</groupId>
+	<artifactId>media-ranking</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MediaRanking</name>
 	<description>Demo project for Spring Boot</description>
