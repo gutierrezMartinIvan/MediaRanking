@@ -9,5 +9,7 @@ public class SeriesEntity {
     String author;
     List<String> genres;
     String dateRelease;
+    List<SeasonEntity> seasons;
+    ReviewEntity review;
 }
 

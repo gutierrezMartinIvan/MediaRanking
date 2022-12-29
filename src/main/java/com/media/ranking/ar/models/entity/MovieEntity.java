@@ -9,4 +9,5 @@ public class MovieEntity {
     String director;
     List<String> genres;
     int  duration;
+    ReviewEntity review;
 }
