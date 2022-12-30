@@ -1,4 +1,4 @@
-package com.media.ranking.ar.models.entity;
+package ar.com.mediaranking.models.entity;
 
 import java.util.List;
 
@@ -9,5 +9,7 @@ public class SeriesEntity {
     String author;
     List<String> genres;
     String dateRelease;
+    List<SeasonEntity> seasons;
+    ReviewEntity review;
 }
 

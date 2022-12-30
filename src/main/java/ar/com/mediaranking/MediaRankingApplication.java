@@ -1,4 +1,4 @@
-package com.media.ranking.ar;
+package ar.com.mediaranking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
