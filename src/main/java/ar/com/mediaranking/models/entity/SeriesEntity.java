@@ -3,7 +3,7 @@ package ar.com.mediaranking.models.entity;
 import java.util.List;
 
 public class SeriesEntity {
-    long id;
+    Long id;
     String title;
     String description;
     String author;
