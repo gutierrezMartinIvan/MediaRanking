@@ -11,7 +11,7 @@ public class OpenAPIConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("movies")
+                .group("")
                 .pathsToMatch("/**")
                 .build();
     }
