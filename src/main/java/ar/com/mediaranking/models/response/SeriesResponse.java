@@ -1,7 +1,10 @@
 package ar.com.mediaranking.models.response;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
+@Data
 public class SeriesResponse {
 
     Long id;
@@ -21,10 +24,9 @@ public class SeriesResponse {
     @NotEmpty(message = "Description can not be empty")
     String author;
 
-    @Min(1800)
-    @Max(2023)
+    @Column(nullable = false)
+    @Min(value=1800)
+    @Max(value=2023)
     @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
-    Short year;
+    Integer year;
 }

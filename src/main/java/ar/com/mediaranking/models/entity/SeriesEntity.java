@@ -2,14 +2,16 @@ package ar.com.mediaranking.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Table(name = "series")
+@Data
 public class SeriesEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "series_id")
     Long id;
 
@@ -31,12 +33,11 @@ public class SeriesEntity {
     String author;
 
     @Column(nullable = false)
-    @Min(1800)
-    @Max(2023)
+    @Min(value=1800)
+    @Max(value=2023)
     @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
-    Short year;
+    Integer year;
+
 
     /*
     List<String> genres;

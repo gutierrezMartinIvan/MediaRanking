@@ -10,9 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +24,8 @@ public class SeriesController {
 
     @Transactional
     @Operation(summary = "Creates a new series")
-    public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
+    @PostMapping
+    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
         SeriesResponse response = new SeriesResponse();
 
         if (service.isNull(request))
@@ -38,6 +37,7 @@ public class SeriesController {
     }
 
     @Operation(summary = "Get a series by ID")
+    @GetMapping
     public ResponseEntity<List<SeriesResponse>> getAllSeries() {
         return ResponseEntity.ok(service.getAll());
     }

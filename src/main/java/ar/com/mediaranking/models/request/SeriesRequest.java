@@ -22,10 +22,9 @@ public class SeriesRequest {
     @NotEmpty(message = "Description can not be empty")
     String author;
 
-    @Min(1800)
-    @Max(2023)
+    @Column(nullable = false)
+    @Min(value=1800)
+    @Max(value=2023)
     @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
-    Short year;
+    Integer year;
 }

@@ -27,8 +27,9 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
-        SeriesEntity entitySave = mapper.convertDtoToEntity(request);
-        SeriesResponse response = mapper.convertEntityToDto(repository.save(entitySave));
+        SeriesEntity entity = mapper.convertDtoToEntity(request);
+        SeriesEntity entitySave = repository.save(entity);
+        SeriesResponse response = mapper.convertEntityToDto(entitySave);
         return response;
     }
 
