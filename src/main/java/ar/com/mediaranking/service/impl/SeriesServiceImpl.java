@@ -38,5 +38,11 @@ public class SeriesServiceImpl implements ISeriesService {
         return mapper.convertSeriesToDto(repository.findAll());
     }
 
+    @Override
+    public SeriesResponse getSerieById(Long id) {
+        //TODO validate and throw exceptions
+        return mapper.convertEntityToDto(repository.getReferenceById(id));
+    }
+
 
 }

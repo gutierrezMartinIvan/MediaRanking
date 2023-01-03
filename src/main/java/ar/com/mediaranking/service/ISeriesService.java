@@ -12,4 +12,6 @@ public interface ISeriesService {
     SeriesResponse save(SeriesRequest request);
 
     List<SeriesResponse> getAll();
+
+    SeriesResponse getSerieById(Long id);
 }

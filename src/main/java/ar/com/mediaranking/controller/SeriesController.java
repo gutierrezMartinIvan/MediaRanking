@@ -36,9 +36,15 @@ public class SeriesController {
         return ResponseEntity.created(null).body(response);
     }
 
-    @Operation(summary = "Get a series by ID")
+    @Operation(summary = "Get all series")
     @GetMapping
     public ResponseEntity<List<SeriesResponse>> getAllSeries() {
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @Operation(summary = "Get a serie byy its ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<SeriesResponse> getSerieById(@RequestParam Long id) {
+        return ResponseEntity.ok(service.getSerieById(id));
     }
 }
