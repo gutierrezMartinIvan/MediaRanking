@@ -14,4 +14,6 @@ public interface ISeriesService {
     List<SeriesResponse> getAll();
 
     SeriesResponse getSerieById(Long id);
+
+    List<SeriesResponse> getByFilters(String tittle, String author, List<String> genres, Integer year);
 }

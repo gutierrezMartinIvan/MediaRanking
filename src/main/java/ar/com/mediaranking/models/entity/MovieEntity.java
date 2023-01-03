@@ -24,8 +24,8 @@ public class MovieEntity {
     @Column(nullable = false)
     String director;
 
-    @Column(nullable = false)
-    String genres;
+    @ElementCollection
+    List<String> genres;
 
     @Column(nullable = false)
     @Min(value=1)

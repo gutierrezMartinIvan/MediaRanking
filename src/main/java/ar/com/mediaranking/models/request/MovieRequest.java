@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class MovieRequest {
     @NotNull(message = "Description can not be null")
@@ -21,10 +23,7 @@ public class MovieRequest {
     @NotEmpty(message = "Description can not be empty")
     String director;
 
-    @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
-    String genres;
+    List<String> genres;
 
     @Min(value=1)
     @Max(value=9999)

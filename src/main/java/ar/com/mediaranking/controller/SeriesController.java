@@ -47,4 +47,16 @@ public class SeriesController {
     public ResponseEntity<SeriesResponse> getSerieById(@RequestParam Long id) {
         return ResponseEntity.ok(service.getSerieById(id));
     }
+
+    @Operation(summary = "Get a serie by filters")
+    @GetMapping("/filter")
+    public ResponseEntity<List<SeriesResponse>> getDetailsByFilters(
+            @RequestParam(required = false) String tittle,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) List<String> genres
+    ) {
+        List<SeriesResponse> series = service.getByFilters(tittle, author, genres, year);
+        return ResponseEntity.ok(series);
+    }
 }
