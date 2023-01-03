@@ -59,4 +59,10 @@ public class SeriesController {
         List<SeriesResponse> series = service.getByFilters(tittle, author, genres, year);
         return ResponseEntity.ok(series);
     }
+
+    @Operation(summary = "Delete a serie by its ID")
+    @DeleteMapping("/delete/{id}")
+    public void deleteSerieById(@RequestParam Long id) {
+
+    }
 }
