@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class SeriesFilter {
-    private String tittle;
+    private String title;
     private String author;
     private Integer year;
     private List<String> genres;

@@ -18,18 +18,18 @@ public class SeriesSpecification {
         return (((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (StringUtils.hasLength(filter.getTittle())) {
+            if (StringUtils.hasLength(filter.getTitle())) {
                 predicates.add(
                         criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("tittle")),
-                                "%" + filter.getTittle().toLowerCase() + "%"));
+                                criteriaBuilder.lower(root.get("title")),
+                                "%" + filter.getTitle().toLowerCase() + "%"));
             }
 
             if (!CollectionUtils.isEmpty(filter.getGenres())) {
                 predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("genres")),
-                                "%" + filter.getGenres() + "%"));
+                        root.get("genres").in(
+                                filter.getGenres()
+                        ));
             }
 
             if (StringUtils.hasLength(filter.getAuthor())) {
