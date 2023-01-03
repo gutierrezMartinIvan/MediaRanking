@@ -20,11 +20,20 @@ public class MovieController {
     @Autowired
     private MovieService service;
 
+
     @GetMapping
     public ResponseEntity<List<MovieResponse>> getMovies(@RequestParam(required = false) String title,
                                                     @RequestParam(required = false) String director,
                                                     @RequestParam(required = false) String genre) {
-        return ResponseEntity.ok(service.findAll(title, director, genre));
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<MovieResponse>> getMoviesFilter(@RequestParam(required = false) String title,
+                                                         @RequestParam(required = false) String director,
+                                                         @RequestParam(required = false) List<String> genre) {
+        List<MovieResponse> movie = service.findByFilter(title, director, genre);
+        return ResponseEntity.ok(movie);
     }
 
     @GetMapping("/{id}")

@@ -1,11 +1,17 @@
 package ar.com.mediaranking.models.response;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MovieResponse {
     Long id;
     @NotNull(message = "Description can not be null")
