@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SeriesResponse {
 
@@ -29,4 +31,7 @@ public class SeriesResponse {
     @Max(value=2023)
     @NotNull(message = "Description can not be null")
     Integer year;
+
+    @NotNull(message = "Genres can not be null")
+    List<String> genres;
 }
