@@ -3,7 +3,12 @@ package ar.com.mediaranking.controller;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
+import ar.com.mediaranking.models.request.MovieRequest;
+import ar.com.mediaranking.models.response.MovieResponse;
+import ar.com.mediaranking.models.response.SeriesResponse;
+import ar.com.mediaranking.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,32 +18,32 @@ import java.util.List;
 public class MovieController {
 
     @Autowired
-    private MovieRepository movieRepository;
+    private MovieService service;
 
     @GetMapping
-    public List<MovieEntity> getMovies(@RequestParam(required = false) String title,
-                                          @RequestParam(required = false) String director,
-                                          @RequestParam(required = false) String genre) {
-        return movieRepository.findAll();
+    public ResponseEntity<List<MovieResponse>> getMovies(@RequestParam(required = false) String title,
+                                                    @RequestParam(required = false) String director,
+                                                    @RequestParam(required = false) String genre) {
+        return ResponseEntity.ok(service.findAll(title, director, genre));
     }
 
     @GetMapping("/{id}")
-    public MovieEntity getMovieById(@PathVariable Long id) {
-        return movieRepository.findById(id).orElse(null);
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
+        return ResponseEntity.ok( service.findById(id) );
     }
 
     @PostMapping
-    public MovieEntity createMovie(@RequestBody MovieEntity movie) {
-        return movieRepository.save(movie);
+    public ResponseEntity<MovieResponse> createMovie(@RequestBody MovieRequest movie) {
+        return ResponseEntity.ok(service.save(movie));
     }
 
     @DeleteMapping
     public void deleteMovie(@RequestParam long id) {
-        movieRepository.deleteById(id);
+        service.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public MovieEntity updateMovie(@RequestBody MovieEntity movie) {
-        return movieRepository.save(movie);
+    public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id, @RequestBody MovieRequest movie) {
+        return ResponseEntity.ok(service.update(id, movie));
     }
 }

@@ -1,15 +1,14 @@
-package ar.com.mediaranking.models.request;
+package ar.com.mediaranking.models.response;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class SeriesRequest {
-    @NotNull(message = "Tittle can not be null")
-    @NotBlank(message = "Tittle can not be blank")
-    @NotEmpty(message = "Tittle can not be empty")
-    @Pattern(regexp =  "^[A-Za-z0-9!@#$%^&*()_+=-]*$", message = "Tittle only can contain letters, numbers and special characters")
+public class MovieResponse {
+    Long id;
+    @NotNull(message = "Description can not be null")
+    @NotBlank(message = "Description can not be blank")
+    @NotEmpty(message = "Description can not be empty")
     String title;
 
     @NotNull(message = "Description can not be null")
@@ -20,10 +19,14 @@ public class SeriesRequest {
     @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
     @NotEmpty(message = "Description can not be empty")
-    String author;
+    String director;
 
-    @Min(value=1800)
-    @Max(value=2023)
     @NotNull(message = "Description can not be null")
-    Integer year;
+    @NotBlank(message = "Description can not be blank")
+    @NotEmpty(message = "Description can not be empty")
+    String genres;
+
+    @Min(value=1)
+    @Max(value=9999)
+    int  duration;
 }

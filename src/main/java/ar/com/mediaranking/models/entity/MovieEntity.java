@@ -1,6 +1,8 @@
 package ar.com.mediaranking.models.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.util.List;
@@ -26,6 +28,8 @@ public class MovieEntity {
     String genres;
 
     @Column(nullable = false)
+    @Min(value=1)
+    @Max(value=9999)
     int  duration;
 
 }

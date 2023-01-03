@@ -35,7 +35,7 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public List<SeriesResponse> getAll() {
-        return mapper.convertEntityToDto(repository.findAll());
+        return mapper.convertSeriesToDto(repository.findAll());
     }
 
 
