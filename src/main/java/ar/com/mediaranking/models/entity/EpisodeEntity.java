@@ -10,6 +10,7 @@ public class EpisodeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "episodes_id")
     Long id;
 
     @Column(nullable = false)
