@@ -1,7 +1,9 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.models.entity.SeriesEntity;
+import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
+import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.ISeriesService;
@@ -20,6 +22,9 @@ public class SeriesServiceImpl implements ISeriesService {
     @Autowired
     private DtoToEntityConverter mapper;
 
+    @Autowired
+    private SeriesSpecification seriesSpecification;
+
     @Override
     public boolean isNull(SeriesRequest request) {
         return false;
@@ -36,6 +41,14 @@ public class SeriesServiceImpl implements ISeriesService {
     @Override
     public List<SeriesResponse> getAll() {
         return mapper.convertSeriesToDto(repository.findAll());
+    }
+
+    @Override
+    public List<SeriesResponse> getByFilters(String tittle, String author, List<String> genres, Integer year) {
+        SeriesFilter seriesFilter = new SeriesFilter(tittle, author, year, genres);
+        List<SeriesEntity> entities = repository.findAll(seriesSpecification.getByFilters(seriesFilter));
+        List<SeriesResponse> responses = mapper.convertSeriesToDto(entities);
+        return responses;
     }
 
 
