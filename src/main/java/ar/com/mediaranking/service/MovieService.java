@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service;
 
+import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.request.MovieRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ public interface MovieService {
 
     MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/;
 
-    List<MovieResponse> findAll(String title, String director, String genre);;
+    List<MovieResponse> findAll();;
 
     void deleteById(long id);
 
@@ -20,4 +21,7 @@ public interface MovieService {
 
     MovieResponse update(long id, MovieRequest movie);
 
+    List<MovieResponse> findByGenre(String genre);
+
+    List<MovieResponse> findByFilter(String title, String director, List<String> genre);
 }

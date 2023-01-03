@@ -2,11 +2,17 @@ package ar.com.mediaranking.models.request;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MovieRequest {
     @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
