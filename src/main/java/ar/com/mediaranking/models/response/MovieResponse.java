@@ -3,6 +3,8 @@ package ar.com.mediaranking.models.response;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class MovieResponse {
     Long id;
@@ -21,10 +23,7 @@ public class MovieResponse {
     @NotEmpty(message = "Description can not be empty")
     String director;
 
-    @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
-    String genres;
+    List<String> genres;
 
     @Min(value=1)
     @Max(value=9999)
