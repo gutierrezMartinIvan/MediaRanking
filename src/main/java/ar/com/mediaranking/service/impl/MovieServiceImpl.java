@@ -11,9 +11,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 
@@ -34,8 +33,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/ {
         MovieEntity entity = mapper.convertDtoToEntity(request);
         MovieEntity entitySave = repository.save(entity);
-        MovieResponse response = mapper.convertEntityToDto(entitySave);
-        return response;
+        return mapper.convertEntityToDto(entitySave);
     }
 
     /*
@@ -57,7 +55,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse findById(Long id){
-        return mapper.convertEntityToDto(repository.findById(id).get());
+        return mapper.convertEntityToDto(repository.findById(id).orElse(null));
     }
 
     @Override
@@ -65,8 +63,7 @@ public class MovieServiceImpl implements MovieService {
         MovieEntity entity = mapper.convertDtoToEntity(movie);
         repository.deleteById(id);
         MovieEntity entitySave = repository.save(entity);
-        MovieResponse response = mapper.convertEntityToDto(entitySave);
-        return response;
+        return mapper.convertEntityToDto(entitySave);
     }
 
     public List<MovieResponse> findByGenre(String genre){
@@ -74,17 +71,15 @@ public class MovieServiceImpl implements MovieService {
     }
     
 
-    public List<MovieResponse> findByFilter(String title, String director, List<String> genres){
+    public List<MovieResponse> findByFilter(String title, String director, Set<String> genres){
         MovieEntity entity = new MovieEntity();
         entity.setTitle(title);
         entity.setDirector(director);
-        entity.setGenres(genres);
 
         ExampleMatcher matcher = ExampleMatcher.matchingAll()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withMatcher("title", contains().ignoreCase())
                 .withMatcher("director", contains().ignoreCase())
-                //.withMatcher("genres", (path,value) -> { return Optional.of((List<String>)value).stream().allMatch(genres::contains); })
                 .withIgnorePaths("id","description","duration");
 
         List<MovieEntity> entities = repository.findAll(Example.of(entity, matcher));

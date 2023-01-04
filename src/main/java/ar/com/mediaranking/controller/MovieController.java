@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/movies")
@@ -31,8 +32,8 @@ public class MovieController {
     @GetMapping("/filter")
     public ResponseEntity<List<MovieResponse>> getMoviesFilter(@RequestParam(required = false) String title,
                                                          @RequestParam(required = false) String director,
-                                                         @RequestParam(required = false) List<String> genre) {
-        List<MovieResponse> movie = service.findByFilter(title, director, genre);
+                                                         @RequestParam(required = false) Set<String> genres) {
+        List<MovieResponse> movie = service.findByFilter(title, director, genres);
         return ResponseEntity.ok(movie);
     }
 

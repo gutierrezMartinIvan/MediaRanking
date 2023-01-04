@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -29,7 +31,7 @@ public class MovieResponse {
     @NotEmpty(message = "Description can not be empty")
     String director;
 
-    List<String> genres;
+    private Set<String> genres = new HashSet<>();;
 
     @Min(value=1)
     @Max(value=9999)

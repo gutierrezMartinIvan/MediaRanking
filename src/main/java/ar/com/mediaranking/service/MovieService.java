@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface MovieService {
     boolean isNull(MovieRequest request);
@@ -23,5 +24,5 @@ public interface MovieService {
 
     List<MovieResponse> findByGenre(String genre);
 
-    List<MovieResponse> findByFilter(String title, String director, List<String> genre);
+    List<MovieResponse> findByFilter(String title, String director, Set<String> genres);
 }

@@ -28,4 +28,16 @@ public class ReviewEntity {
     @Max(value=10)
     @NotNull(message = "Description can not be null")
     Integer rating;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "movie_entity_id")
+    private MovieEntity movieEntity;
+
+    public MovieEntity getMovieEntity() {
+        return movieEntity;
+    }
+
+    public void setMovieEntity(MovieEntity movieEntity) {
+        this.movieEntity = movieEntity;
+    }
 }

@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "movies")
@@ -33,11 +35,15 @@ public class MovieEntity {
     @ElementCollection
     @CollectionTable(name = "generes", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "generes")
-    List<String> genres;
+    private Set<String> genres = new HashSet<>();
 
     @Column(nullable = false)
     @Min(value=1)
     @Max(value=9999)
     int  duration;
 
+    /*
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    List<ReviewEntity> reviews;
+    */
 }
