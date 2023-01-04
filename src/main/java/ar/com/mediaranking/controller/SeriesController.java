@@ -1,5 +1,6 @@
 package ar.com.mediaranking.controller;
 
+import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.ISeriesService;
@@ -63,6 +64,12 @@ public class SeriesController {
     @Operation(summary = "Delete a serie by its ID")
     @DeleteMapping("/delete/{id}")
     public void deleteSerieById(@RequestParam Long id) {
+        service.deleteSerieById(id);
+    }
 
+    @Operation(summary = "Insert a review in a series")
+    @PostMapping("/review/{id}")
+    public ResponseEntity<SeriesResponse> insertReviewInSeries(@RequestParam Long id, @RequestBody ReviewRequest review) {
+        return ResponseEntity.ok(service.insertReview2Series(id, review));
     }
 }

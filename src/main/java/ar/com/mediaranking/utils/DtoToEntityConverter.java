@@ -1,10 +1,13 @@
 package ar.com.mediaranking.utils;
 
 import ar.com.mediaranking.models.entity.MovieEntity;
+import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.request.MovieRequest;
+import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
+import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +51,11 @@ public class DtoToEntityConverter {
                 .collect(Collectors.toList());
     }
 
+    public ReviewEntity convertDtoToEntity(ReviewRequest reviewRequest) {
+        return modelMapper.map(reviewRequest, ReviewEntity.class);
+    }
+
+    public ReviewResponse convertEntityToDto(ReviewEntity entity) {
+            return modelMapper.map(entity, ReviewResponse.class);
+    }
 }

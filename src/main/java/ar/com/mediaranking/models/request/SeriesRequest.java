@@ -2,11 +2,17 @@ package ar.com.mediaranking.models.request;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SeriesRequest {
     @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")

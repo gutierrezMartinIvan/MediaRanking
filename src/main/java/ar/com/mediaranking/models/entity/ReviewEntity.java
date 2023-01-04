@@ -33,11 +33,7 @@ public class ReviewEntity {
     @JoinColumn(name = "movie_entity_id")
     private MovieEntity movieEntity;
 
-    public MovieEntity getMovieEntity() {
-        return movieEntity;
-    }
-
-    public void setMovieEntity(MovieEntity movieEntity) {
-        this.movieEntity = movieEntity;
-    }
+    @ManyToOne(cascade = CascadeType.DETACH.PERSIST.MERGE.REFRESH, targetEntity = SeriesEntity.class)
+    @JoinColumn(name = "series_id")
+    private SeriesEntity series;
 }

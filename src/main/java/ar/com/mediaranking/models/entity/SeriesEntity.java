@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,10 +42,8 @@ public class SeriesEntity {
     @ElementCollection
     private List<String> genres;
 
-
-    /*
-    List<String> genres;
-    List<SeasonEntity> seasons;
-    ReviewEntity review;*/
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = ReviewEntity.class)
+    @JoinColumn(name = "review_id")
+    private List<ReviewEntity> review = new ArrayList<>();
 }
 
