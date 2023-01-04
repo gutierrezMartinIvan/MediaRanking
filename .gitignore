@@ -36,3 +36,9 @@ build/
 .mvn
 mvnw
 mvnw.cmd
+
+## docker ##
+docker-compose.yml
+
+## application properties ##
+application.properties
