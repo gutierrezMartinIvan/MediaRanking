@@ -18,16 +18,17 @@ public class SeasonEntity {
     @Column(nullable = false)
     @Min(value=1)
     @Max(value=99)
-    @NotNull(message = "Description can not be null")
     int number;
 
     @Column(nullable = false)
-    @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
+    @Size(min = 1, max = 400)
     String Description;
-
-    @ElementCollection
+    /*
+    @Column(nullable = false)
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     List<EpisodeEntity> episodes;
-    //ReviewEntity review;
+
+
+    @Column(nullable = false)
+    List<ReviewEntity> review;*/
 }

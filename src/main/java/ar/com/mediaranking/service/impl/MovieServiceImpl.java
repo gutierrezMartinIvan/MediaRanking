@@ -11,9 +11,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -70,6 +72,7 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieResponse> findByGenre(String genre){
         return mapper.convertMoviesToDto(repository.findAllByGenres(genre));
     }
+    
 
     public List<MovieResponse> findByFilter(String title, String director, List<String> genres){
         MovieEntity entity = new MovieEntity();
@@ -77,15 +80,20 @@ public class MovieServiceImpl implements MovieService {
         entity.setDirector(director);
         entity.setGenres(genres);
 
-        ExampleMatcher matcher = ExampleMatcher.matching()
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withMatcher("title", contains().ignoreCase())
                 .withMatcher("director", contains().ignoreCase())
-                .withMatcher("genres", contains().ignoreCase())
+                //.withMatcher("genres", (path,value) -> { return Optional.of((List<String>)value).stream().allMatch(genres::contains); })
                 .withIgnorePaths("id","description","duration");
 
-        Example x = Example.of(entity);
-        return mapper.convertMoviesToDto(repository.findAll(Example.of(entity, matcher)));
+        List<MovieEntity> entities = repository.findAll(Example.of(entity, matcher));
 
+        if(genres != null && !genres.isEmpty()){
+            entities.removeIf(movie -> !movie.getGenres().containsAll(genres));
+        }
+
+        return mapper.convertMoviesToDto(entities);
     }
 
 }

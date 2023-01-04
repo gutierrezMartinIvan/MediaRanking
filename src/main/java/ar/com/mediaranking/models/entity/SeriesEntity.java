@@ -44,7 +44,6 @@ public class SeriesEntity {
 
     /*
     List<String> genres;
-    String dateRelease;
     List<SeasonEntity> seasons;
     ReviewEntity review;*/
 }

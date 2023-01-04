@@ -30,5 +30,10 @@ public class EpisodeEntity {
     @Min(value=1)
     @Max(value=99)
     @NotNull(message = "Description can not be null")
-    Integer seasonNumber;
+    Integer episodeNumber;
+    /*
+    @ManyToOne
+    @JoinColumn(name = "season_entity_season_id")
+    private SeasonEntity seasonEntity;*/
+
 }
