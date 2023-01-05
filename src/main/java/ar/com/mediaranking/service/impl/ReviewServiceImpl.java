@@ -1,6 +1,7 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.models.entity.ReviewEntity;
+import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.repository.IReviewRepository;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.ReviewResponse;
@@ -19,7 +20,14 @@ public class ReviewServiceImpl implements IReviewService {
 
     @Override
     public ReviewEntity save(ReviewRequest reviewRequest) {
+        return null;
+    }
+
+    @Override
+    public ReviewEntity saveSeries(ReviewRequest reviewRequest, SeriesEntity series) {
         ReviewEntity entitySaved = mapper.convertDtoToEntity(reviewRequest);
-        return repository.save(entitySaved);
+        entitySaved.setSeries(series);
+        repository.save(entitySaved);
+        return entitySaved;
     }}
 

@@ -70,6 +70,7 @@ public class SeriesController {
     @Operation(summary = "Insert a review in a series")
     @PostMapping("/review/{id}")
     public ResponseEntity<SeriesResponse> insertReviewInSeries(@RequestParam Long id, @RequestBody ReviewRequest review) {
-        return ResponseEntity.ok(service.insertReview2Series(id, review));
+        SeriesResponse response = service.insertReview2Series(id, review);
+        return ResponseEntity.ok(response);
     }
 }

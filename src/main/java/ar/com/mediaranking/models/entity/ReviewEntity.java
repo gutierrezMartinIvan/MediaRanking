@@ -8,14 +8,12 @@ import lombok.Data;
 @Table(name = "reviews")
 @Data
 public class ReviewEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
-    private long id;
-
-
-    private String userId;
+    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(nullable = false)
     @NotNull(message = "Description can not be null")
@@ -26,14 +24,14 @@ public class ReviewEntity {
     @Column(nullable = false)
     @Min(value=1)
     @Max(value=10)
-    @NotNull(message = "Description can not be null")
+    @NotNull(message = "raiting can not be null")
     Integer rating;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "movie_entity_id")
+    @JoinColumn(name = "movie_id")
     private MovieEntity movieEntity;
 
-    @ManyToOne(cascade = CascadeType.DETACH.PERSIST.MERGE.REFRESH, targetEntity = SeriesEntity.class)
+    @ManyToOne
     @JoinColumn(name = "series_id")
     private SeriesEntity series;
 }

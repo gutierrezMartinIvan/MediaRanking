@@ -30,7 +30,6 @@ public class DtoToEntityConverter {
         return modelMapper.map(entity, SeriesResponse.class);
     }
 
-
     public List<SeriesResponse> convertSeriesToDto(List<SeriesEntity> series) {
         return series.stream()
                 .map(this::convertEntityToDto)

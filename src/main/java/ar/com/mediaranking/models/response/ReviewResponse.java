@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewResponse {
-
     private Long id;
 
     @NotNull(message = "User ID can not be null")
@@ -29,9 +28,4 @@ public class ReviewResponse {
     @NotBlank(message = "Rating can not be blank")
     @NotEmpty(message = "Rating can not be empty")
     private String rating;
-
-    @NotNull(message = "series Id can not be null")
-    @NotBlank(message = "series Id can not be blank")
-    @NotEmpty(message = "series Id can not be empty")
-    private Long seriesId;
 }

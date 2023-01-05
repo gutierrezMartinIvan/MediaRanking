@@ -1,5 +1,6 @@
 package ar.com.mediaranking.models.entity;
 
+import ar.com.mediaranking.models.response.ReviewResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 public class SeriesEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "series_id")
     private Long id;
 
@@ -39,11 +40,13 @@ public class SeriesEntity {
     @NotNull(message = "Description can not be null")
     private Integer year;
 
-    @ElementCollection
-    private List<String> genres;
+    @ManyToMany
+    @JoinTable(name = "series_genres",
+    joinColumns = @JoinColumn(name = "series_id"),
+    inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<GenreEntity> genres;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = ReviewEntity.class)
-    @JoinColumn(name = "review_id")
-    private List<ReviewEntity> review = new ArrayList<>();
+    @OneToMany(mappedBy = "series")
+    private List<ReviewEntity> reviews;
 }
 

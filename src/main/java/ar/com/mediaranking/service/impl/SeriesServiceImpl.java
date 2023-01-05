@@ -72,12 +72,16 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public SeriesResponse insertReview2Series(Long id, ReviewRequest review) {
-        ReviewEntity reviewEntity = reviewService.save(review);
-        Optional<SeriesEntity> optionalSeries = repository.findById(id);
-        if (optionalSeries.isPresent()) {
-            optionalSeries.get().getReview().add(reviewEntity);
-        }
-        return mapper.convertEntityToDto(optionalSeries.get());
+        SeriesEntity entityUpdated = null;
+        Optional<SeriesEntity> seriesOptional = repository.findById(id);
+
+        if (seriesOptional.isPresent())
+            entityUpdated = seriesOptional.get();
+
+        ReviewEntity reviewSaved = reviewService.saveSeries(review, seriesOptional.get());
+        entityUpdated.getReviews().add(reviewSaved);
+        repository.save(entityUpdated);
+        return mapper.convertEntityToDto(entityUpdated);
     }
 
 
