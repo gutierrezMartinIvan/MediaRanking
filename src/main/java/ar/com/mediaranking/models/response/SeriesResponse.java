@@ -1,5 +1,6 @@
 package ar.com.mediaranking.models.response;
 
+import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
@@ -34,7 +35,7 @@ public class SeriesResponse {
     Integer year;
 
     @NotNull(message = "Genres can not be null")
-    List<String> genres;
+    List<GenreEntity> genres;
 
     private List<ReviewResponse> reviews;
 }
