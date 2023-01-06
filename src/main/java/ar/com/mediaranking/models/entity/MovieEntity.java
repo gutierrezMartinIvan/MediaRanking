@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,8 +51,8 @@ public class MovieEntity {
     @Max(value=2300)
     int  year;
 
-    /*
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    List<ReviewEntity> reviews;
-    */
+
+    @OneToMany(mappedBy = "movies")
+    List<ReviewEntity> reviews = new ArrayList<>();
+
 }

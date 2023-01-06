@@ -9,4 +9,5 @@ public interface IReviewService {
     ReviewEntity save(ReviewRequest reviewRequest);
 
     ReviewEntity saveSeries(ReviewRequest review, SeriesEntity series);
+
 }

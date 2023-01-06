@@ -20,7 +20,8 @@ public class ReviewServiceImpl implements IReviewService {
 
     @Override
     public ReviewEntity save(ReviewRequest reviewRequest) {
-        return null;
+        ReviewEntity entity = mapper.convertDtoToEntity(reviewRequest);
+        return repository.save(entity);
     }
 
     @Override
@@ -29,5 +30,6 @@ public class ReviewServiceImpl implements IReviewService {
         entitySaved.setSeries(series);
         repository.save(entitySaved);
         return entitySaved;
-    }}
+    }
+}
 

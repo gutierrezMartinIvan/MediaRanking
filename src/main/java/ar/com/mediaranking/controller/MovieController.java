@@ -4,8 +4,10 @@ import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
+import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.models.response.SeriesResponse;
+import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class MovieController {
 
     @Autowired
     private MovieService service;
+
+    @Autowired
+    private IReviewService reviewService;
 
 
     @GetMapping
@@ -55,5 +60,10 @@ public class MovieController {
     @PutMapping("/{id}")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id, @RequestBody MovieRequest movie) {
         return ResponseEntity.ok(service.update(id, movie));
+    }
+
+    @PostMapping("/{id}/review")
+    public ResponseEntity<MovieResponse> addReview(@PathVariable long id, @RequestBody ReviewRequest review) {
+        return ResponseEntity.ok(service.addReview(id, review));
     }
 }

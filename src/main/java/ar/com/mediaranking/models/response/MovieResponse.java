@@ -47,4 +47,6 @@ public class MovieResponse {
     @Max(value=2300)
     @Schema(example = "2010")
     int  year;
+
+    List<ReviewResponse> reviews;
 }

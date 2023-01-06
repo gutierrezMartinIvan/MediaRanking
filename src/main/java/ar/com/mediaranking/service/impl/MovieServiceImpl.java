@@ -1,9 +1,12 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.models.entity.MovieEntity;
+import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
+import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
+import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,9 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieRepository repository;
+
+    @Autowired
+    private IReviewService reviewService;
 
     @Autowired
     private DtoToEntityConverter mapper;
@@ -89,6 +95,14 @@ public class MovieServiceImpl implements MovieService {
         }
 
         return mapper.convertMoviesToDto(entities);
+    }
+
+    public MovieResponse addReview(long id, ReviewRequest review){
+        MovieEntity entity = repository.findById(id).orElse(null);
+        ReviewEntity reviewEntity = reviewService.save(review);
+        entity.getReviews().add(reviewEntity);
+        MovieEntity entitySave = repository.save(entity);
+        return mapper.convertEntityToDto(entitySave);
     }
 
 }

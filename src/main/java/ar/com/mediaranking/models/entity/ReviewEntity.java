@@ -27,11 +27,12 @@ public class ReviewEntity {
     @NotNull(message = "raiting can not be null")
     Integer rating;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "movie_id")
-    private MovieEntity movieEntity;
+    private MovieEntity movies;
 
     @ManyToOne
     @JoinColumn(name = "series_id")
     private SeriesEntity series;
+
 }

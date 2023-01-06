@@ -5,6 +5,7 @@ import ar.com.mediaranking.models.repository.IGenreRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +20,14 @@ public class SeriesServiceConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mm = new ModelMapper();
-
-
+        mm.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
         mm.addConverter(new Converter<String, GenreEntity>() {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
             {
                 String s = context.getSource();
-                GenreEntity genre = genreRepository.findByName(s.toUpperCase());
                 // TODO: Falta agregar excepcion si no existe el genero
-                return genre;
+                return genreRepository.findByName(s.toUpperCase());
             }
         });
 
