@@ -35,7 +35,7 @@ public class SeriesResponse {
     Integer year;
 
     @NotNull(message = "Genres can not be null")
-    List<GenreEntity> genres;
+    List<String> genres;
 
     private List<ReviewResponse> reviews;
 }

@@ -37,5 +37,5 @@ public class SeriesRequest {
     Integer year;
 
     @NotNull(message = "Genres can not be null")
-    List<GenreRequest> genres;
+    List<String> genres;
 }
