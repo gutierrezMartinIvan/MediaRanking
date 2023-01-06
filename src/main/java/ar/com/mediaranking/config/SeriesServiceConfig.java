@@ -20,7 +20,7 @@ public class SeriesServiceConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mm = new ModelMapper();
-        mm.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        //mm.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
         mm.addConverter(new Converter<String, GenreEntity>() {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
