@@ -32,10 +32,12 @@ public class MovieEntity {
     @Column(nullable = false)
     String director;
 
-    @ElementCollection
-    @CollectionTable(name = "generes", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "generes")
-    private Set<String> genres = new HashSet<>();
+    @Column(nullable = false)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinTable(name = "movies_genres",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private Set<GenreEntity> genres = new HashSet<>();
 
     @Column(nullable = false)
     @Min(value=1)

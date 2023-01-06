@@ -1,5 +1,6 @@
 package ar.com.mediaranking.models.request;
 
+import ar.com.mediaranking.models.entity.GenreEntity;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
