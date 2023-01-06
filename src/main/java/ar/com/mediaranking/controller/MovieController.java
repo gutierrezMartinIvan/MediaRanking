@@ -36,9 +36,13 @@ public class MovieController {
 
     @GetMapping("/filter")
     public ResponseEntity<List<MovieResponse>> getMoviesFilter(@RequestParam(required = false) String title,
-                                                         @RequestParam(required = false) String director,
-                                                         @RequestParam(required = false) Set<String> genres) {
-        List<MovieResponse> movie = service.findByFilter(title, director, genres);
+                                                               @RequestParam(required = false) String director,
+                                                               @RequestParam(required = false) Set<String> genres,
+                                                               @RequestParam(required = false) Integer year,
+                                                               @RequestParam(required = false) Integer minDuration,
+                                                               @RequestParam(required = false) Integer maxDuration
+    ){
+        List<MovieResponse> movie = service.findByFilter(title, director, year, minDuration, maxDuration, genres);
         return ResponseEntity.ok(movie);
     }
 

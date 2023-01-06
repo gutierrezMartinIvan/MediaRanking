@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
@@ -11,9 +12,12 @@ import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -37,6 +42,19 @@ public class MovieServiceImpl implements MovieService {
     public boolean isNull(MovieRequest request) {
         return false;
     }
+
+    /*
+    public static Specification<MovieEntity> getMoviesByTasteIn(Set<String> taste) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get(TASTE)).value(taste);
+    }
+
+    public static Specification<MovieEntity> getDurationInBetween(float minPrice, float maxPrice) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get(DURATION), minPrice, maxPrice);
+    }
+
+    public static Specification<MovieEntity> getMoviesTitle(String title_name) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(title), "%" + title_name + "%");
+    }*/
 
     @Override
     public MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/ {
@@ -80,24 +98,36 @@ public class MovieServiceImpl implements MovieService {
     }
     
 
-    public List<MovieResponse> findByFilter(String title, String director, Set<String> genres){
-        MovieEntity entity = new MovieEntity();
-        entity.setTitle(title);
-        entity.setDirector(director);
+    public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
+        Specification<List<MovieEntity>> spec = where(null);
 
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                .withMatcher("title", contains().ignoreCase())
-                .withMatcher("director", contains().ignoreCase())
-                .withIgnorePaths("id","description","duration");
-
-        List<MovieEntity> entities = repository.findAll(Example.of(entity, matcher));
-
-        if(genres != null && !genres.isEmpty()){
-            entities.removeIf(movie -> !movie.getGenres().containsAll(genres));
+        if(title != null){
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
+        }
+        if(director != null){
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("director")), "%" + director.toLowerCase() + "%"));
+        }
+        if(year != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("year"), year));
+        }
+        if(minDuration != null){
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("duration"), minDuration));
+        }
+        if(maxDuration != null){
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("duration"), maxDuration));
+        }
+        if(genres != null){
+            spec = spec.and((root, query, cb) -> {
+                Join<MovieEntity, GenreEntity> join = root.join("genres");
+                CriteriaBuilder.In<String> in = cb.in(join.get("name"));
+                mapper.convertSetStringToGenre(genres).forEach(genre -> in.value(genre.getName()));
+                return in;
+            });
         }
 
-        return mapper.convertMoviesToDto(entities);
+
+        return mapper.convertMoviesToDto(repository.findAll(spec));
+
     }
 
     @Override
