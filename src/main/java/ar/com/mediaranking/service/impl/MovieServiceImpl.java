@@ -2,10 +2,12 @@ package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
+import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
+import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
@@ -97,12 +100,18 @@ public class MovieServiceImpl implements MovieService {
         return mapper.convertMoviesToDto(entities);
     }
 
-    public MovieResponse addReview(long id, ReviewRequest review){
-        MovieEntity entity = repository.findById(id).orElse(null);
-        ReviewEntity reviewEntity = reviewService.save(review);
-        entity.getReviews().add(reviewEntity);
-        MovieEntity entitySave = repository.save(entity);
-        return mapper.convertEntityToDto(entitySave);
+    @Override
+    public MovieResponse insertReview2Movie(Long id, ReviewRequest review) {
+        MovieEntity entityUpdated = null;
+        Optional<MovieEntity> movieOptional = repository.findById(id);
+
+        if (movieOptional.isPresent())
+            entityUpdated = movieOptional.get();
+
+        ReviewEntity reviewSaved = reviewService.saveMovie(review, movieOptional.get());
+        entityUpdated.getReviews().add(reviewSaved);
+        repository.save(entityUpdated);
+        return mapper.convertEntityToDto(entityUpdated);
     }
 
 }

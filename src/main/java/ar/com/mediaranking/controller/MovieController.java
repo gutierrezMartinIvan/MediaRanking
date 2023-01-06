@@ -64,6 +64,6 @@ public class MovieController {
 
     @PostMapping("/{id}/review")
     public ResponseEntity<MovieResponse> addReview(@PathVariable long id, @RequestBody ReviewRequest review) {
-        return ResponseEntity.ok(service.addReview(id, review));
+        return ResponseEntity.ok(service.insertReview2Movie(id, review));
     }
 }
