@@ -8,13 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class GenreSeeder implements CommandLineRunner {
-
-    private final List<String> genres = List.of("Action", "Adventure", "Comedy", "Crime", "Drama", "Fantasy", "Historical",
-            "Historical fiction", "Horror", "Magical realism", "Mystery", "Paranoid fiction", "Philosophical", "Political", "Romance",
-            "Saga", "Satire", "Science fiction", "Social", "Speculative", "Thriller", "Urban", "Western");
 
     @Autowired
     private IGenreRepository repository;
@@ -27,9 +24,9 @@ public class GenreSeeder implements CommandLineRunner {
     }
 
     private void loadActivity() {
-        for (String genre : genres) {
-            if(repository.findByName(genre) == null) {
-                repository.save(GenreEntity.builder().name(genre).build());
+        for (Genres genre : Genres.values()) {
+            if(repository.findByName(genre.getDisplayName()) == null) {
+                repository.save(GenreEntity.builder().name(genre.getDisplayName()).build());
             }
         }
     }

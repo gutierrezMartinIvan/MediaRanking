@@ -29,11 +29,12 @@ public class MovieEntity {
     @Column(nullable = false)
     String description;
 
+    //TODO list of directors
     @Column(nullable = false)
     String director;
 
     @Column(nullable = false)
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "movies_genres",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
@@ -43,6 +44,11 @@ public class MovieEntity {
     @Min(value=1)
     @Max(value=9999)
     int  duration;
+
+    @Column(nullable = false)
+    @Min(value=1800)
+    @Max(value=2300)
+    int  year;
 
     /*
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)

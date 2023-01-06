@@ -29,4 +29,10 @@ public class GenreEntity {
             inverseJoinColumns = @JoinColumn(name = "series_id"))
     private List<SeriesEntity> series;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "movies_genres",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<MovieEntity> movies;
+
 }

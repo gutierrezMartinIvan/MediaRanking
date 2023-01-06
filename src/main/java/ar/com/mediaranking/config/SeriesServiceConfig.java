@@ -2,6 +2,7 @@ package ar.com.mediaranking.config;
 
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.repository.IGenreRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -25,7 +26,7 @@ public class SeriesServiceConfig {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
             {
                 String s = context.getSource();
-                GenreEntity genre = genreRepository.findByName(s);
+                GenreEntity genre = genreRepository.findByName(s.toUpperCase());
                 // TODO: Falta agregar excepcion si no existe el genero
                 return genre;
             }
@@ -34,7 +35,7 @@ public class SeriesServiceConfig {
         mm.addConverter(new Converter<GenreEntity, String>() {
             public String convert(MappingContext<GenreEntity, String> context)
             {
-                return context.getSource().getName();
+                return StringUtils.capitalize(context.getSource().getName().toLowerCase());
             }
         });
 
