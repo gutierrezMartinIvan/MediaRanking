@@ -1,9 +1,10 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.SeriesNotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
-import ar.com.mediaranking.models.entity.SeriesEntity;
+import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
 import ar.com.mediaranking.models.request.ReviewRequest;
@@ -87,10 +88,27 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse update(long id, MovieRequest movie){
-        MovieEntity entity = mapper.convertDtoToEntity(movie);
-        repository.deleteById(id);
-        MovieEntity entitySave = repository.save(entity);
-        return mapper.convertEntityToDto(entitySave);
+        // TODO: change exception name
+        MovieEntity entity = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("There is not a movie with the id: " + id));
+
+        if(movie.getTitle() != null && !movie.getTitle().isBlank()){
+            entity.setTitle(movie.getTitle());
+        }
+        if(movie.getDirector() != null && !movie.getDirector().isBlank()){
+            entity.setDirector(movie.getDirector());
+        }
+        if(movie.getGenres() != null && !movie.getGenres().isEmpty()){
+            entity.setGenres(mapper.convertSetStringToGenre(movie.getGenres()));
+        }
+        if(movie.getDuration() != null && movie.getDuration() > 0){
+            entity.setDuration(movie.getDuration());
+        }
+        if(movie.getYear() != null && movie.getYear() > 0){
+            entity.setYear(movie.getYear());
+        }
+
+        MovieEntity updatedEntity = repository.save(entity);
+        return mapper.convertEntityToDto(updatedEntity);
     }
 
     public List<MovieResponse> findByGenre(String genre){

@@ -43,10 +43,10 @@ public class MovieRequest {
     @Min(value=1)
     @Max(value=9999)
     @Schema(description = "Movie duration in minutes", example = "117")
-    int  duration;
+    Integer  duration;
 
     @Min(value=1800)
     @Max(value=2300)
     @Schema(example = "2018")
-    int  year;
+    Integer  year;
 }

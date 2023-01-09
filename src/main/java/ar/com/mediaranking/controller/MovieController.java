@@ -28,9 +28,7 @@ public class MovieController {
 
 
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> getMovies(@RequestParam(required = false) String title,
-                                                    @RequestParam(required = false) String director,
-                                                    @RequestParam(required = false) String genre) {
+    public ResponseEntity<List<MovieResponse>> getMovies() {
         return ResponseEntity.ok(service.findAll());
     }
 
