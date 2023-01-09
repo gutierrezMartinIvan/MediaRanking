@@ -14,6 +14,7 @@ import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -118,6 +119,8 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
         Specification<List<MovieEntity>> spec = where(null);
 
+        String orderReviews = "ASC";
+
         if(title != null){
             spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
         }
@@ -149,16 +152,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse insertReview2Movie(Long id, ReviewRequest review) {
-        MovieEntity entityUpdated = null;
-        Optional<MovieEntity> movieOptional = repository.findById(id);
+        MovieEntity entity = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("There is not a movie with the id: " + id));
 
-        if (movieOptional.isPresent())
-            entityUpdated = movieOptional.get();
-
-        ReviewEntity reviewSaved = reviewService.saveMovie(review, movieOptional.get());
-        entityUpdated.getReviews().add(reviewSaved);
-        repository.save(entityUpdated);
-        return mapper.convertEntityToDto(entityUpdated);
+        ReviewEntity reviewSaved = reviewService.saveMovie(review, entity);
+        entity.getReviews().add(reviewSaved);
+        repository.save(entity);
+        return mapper.convertEntityToDto(entity);
     }
 
 }

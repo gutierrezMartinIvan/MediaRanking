@@ -20,7 +20,7 @@ public class ReviewRequest {
     @NotBlank(message = "User ID can not be blank")
     @NotEmpty(message = "User ID can not be empty")
     @Schema(example = "1")
-    private Long userId;
+    private String userId;
     @NotNull(message = "review can not be null")
     @NotBlank(message = "review can not be blank")
     @NotEmpty(message = "review can not be empty")

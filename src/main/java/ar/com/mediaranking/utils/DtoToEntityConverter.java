@@ -56,7 +56,11 @@ public class DtoToEntityConverter {
     }
 
     public ReviewEntity convertDtoToEntity(ReviewRequest reviewRequest) {
-        return modelMapper.map(reviewRequest, ReviewEntity.class);
+        return ReviewEntity.builder()
+                .userId(reviewRequest.getUserId())
+                .rating(reviewRequest.getRating())
+                .review(reviewRequest.getReview())
+                .build();
     }
 
     public ReviewResponse convertEntityToDto(ReviewEntity entity) {

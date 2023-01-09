@@ -1,19 +1,26 @@
 package ar.com.mediaranking.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "reviews")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
     @Column(name = "user_id")
-    private Long userId;
+    private String userId;
 
     @Column(nullable = false)
     @NotNull(message = "Description can not be null")
