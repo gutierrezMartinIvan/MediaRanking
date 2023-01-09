@@ -44,12 +44,12 @@ public class MovieEntity {
     @Column(nullable = false)
     @Min(value=1)
     @Max(value=9999)
-    int  duration;
+    Integer  duration;
 
     @Column(nullable = false)
     @Min(value=1800)
     @Max(value=2300)
-    int  year;
+    Integer  year;
 
 
     @OneToMany(mappedBy = "movies")

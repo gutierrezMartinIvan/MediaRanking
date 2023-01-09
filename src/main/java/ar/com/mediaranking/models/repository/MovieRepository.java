@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MovieRepository extends JpaRepository<MovieEntity,Long>, JpaSpecificationExecutor {
@@ -16,5 +17,6 @@ public interface MovieRepository extends JpaRepository<MovieEntity,Long>, JpaSpe
 
     List<MovieEntity> findAllByTitleAndDirectorAndGenres(String title, String director, String genre);
 
+    Optional<MovieEntity> findByTitleAndYear(String title, Integer year);
 }
 

@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.MovieAlreadyExistsException;
 import ar.com.mediaranking.exception.SeriesNotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,32 +46,29 @@ public class MovieServiceImpl implements MovieService {
         return false;
     }
 
-    /*
-    public static Specification<MovieEntity> getMoviesByTasteIn(Set<String> taste) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get(TASTE)).value(taste);
-    }
-
-    public static Specification<MovieEntity> getDurationInBetween(float minPrice, float maxPrice) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get(DURATION), minPrice, maxPrice);
-    }
-
-    public static Specification<MovieEntity> getMoviesTitle(String title_name) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(title), "%" + title_name + "%");
-    }*/
 
     @Override
     public MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/ {
+        repository.findByTitleAndYear(request.getTitle(), request.getYear()).ifPresent(movieEntity -> {
+            throw new MovieAlreadyExistsException(
+                    "There is already a movie with the name: " + request.getTitle() +
+                    " and year: " + request.getYear() +
+                    " with id :" + movieEntity.getId()
+            );
+        });
+
         MovieEntity entity = mapper.convertDtoToEntity(request);
         MovieEntity entitySave = repository.save(entity);
         return mapper.convertEntityToDto(entitySave);
     }
 
-    /*
-    public List<MovieResponse> findAll(String genre) {
-        List<MovieEntity> entities = repository.findAllByGenres(genre);
-        List<MovieResponse> responses = mapper.convertEntityToDto(entities);
-        return responses;
-    }*/
+    public List<MovieResponse> saveList(List<MovieRequest> movieList){
+        List<MovieResponse> movieEntityList = new ArrayList<>();
+        for (MovieRequest movieRequest : movieList) {
+            movieEntityList.add(save(movieRequest));
+        }
+        return movieEntityList;
+    }
 
     @Override
     public List<MovieResponse> findAll() {

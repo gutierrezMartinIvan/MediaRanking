@@ -54,6 +54,11 @@ public class MovieController {
         return ResponseEntity.ok(service.save(movie));
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<List<MovieResponse>> createMovieList(@RequestBody List<MovieRequest> movieList) {
+        return ResponseEntity.ok(service.saveList(movieList));
+    }
+
     @DeleteMapping
     public void deleteMovie(@RequestParam long id) {
         service.deleteById(id);
