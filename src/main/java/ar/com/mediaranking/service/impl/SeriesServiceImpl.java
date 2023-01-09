@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.SeriesNotFoundException;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
@@ -54,8 +55,8 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public SeriesResponse getSerieById(Long id) {
-        //TODO validate and throw exceptions
-        return mapper.convertEntityToDto(repository.getReferenceById(id));
+        return mapper.convertEntityToDto(repository.findById(id).
+                orElseThrow(() -> new SeriesNotFoundException("There is not a series with the id: " + id)));
     }
 
     @Override
