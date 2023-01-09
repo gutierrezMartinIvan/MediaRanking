@@ -1,8 +1,13 @@
 package ar.com.mediaranking.models.repository.specification;
 
+import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
+import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +18,9 @@ import java.util.List;
 
 @Component
 public class SeriesSpecification {
+
+    @Autowired
+    private DtoToEntityConverter mapper;
 
     public Specification<SeriesEntity> getByFilters(SeriesFilter filter) {
         return (((root, query, criteriaBuilder) -> {
@@ -25,13 +33,6 @@ public class SeriesSpecification {
                                 "%" + filter.getTitle().toLowerCase() + "%"));
             }
 
-            if (!CollectionUtils.isEmpty(filter.getGenres())) {
-                predicates.add(
-                        root.get("genres").in(
-                                filter.getGenres()
-                        ));
-            }
-
             if (StringUtils.hasLength(filter.getAuthor())) {
                 predicates.add(
                         criteriaBuilder.like(
@@ -41,9 +42,16 @@ public class SeriesSpecification {
 
             if (filter.getYear() != null) {
                 predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("year")),
-                                "%" + filter.getYear() + "%"));
+                        criteriaBuilder.equal(
+                                root.get("year"), filter.getYear())
+                );
+            }
+
+            if (!filter.getGenres().isEmpty()) {
+                Join<SeriesEntity, GenreEntity> join = root.join("genres");
+                CriteriaBuilder.In<String> in = criteriaBuilder.in(join.get("name"));
+                mapper.convertSetStringToGenre(filter.getGenres()).forEach(genre -> in.value(genre.getName()));
+                predicates.add(in);
             }
 
             query.distinct(true);

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SeriesServiceImpl implements ISeriesService {
@@ -58,7 +59,7 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
-    public List<SeriesResponse> getByFilters(String tittle, String author, List<String> genres, Integer year) {
+    public List<SeriesResponse> getByFilters(String tittle, String author, Set<String> genres, Integer year) {
         SeriesFilter seriesFilter = new SeriesFilter(tittle, author, year, genres);
         List<SeriesEntity> entities = repository.findAll(seriesSpecification.getByFilters(seriesFilter));
         List<SeriesResponse> responses = mapper.convertSeriesToDto(entities);
@@ -82,6 +83,14 @@ public class SeriesServiceImpl implements ISeriesService {
         entityUpdated.getReviews().add(reviewSaved);
         repository.save(entityUpdated);
         return mapper.convertEntityToDto(entityUpdated);
+    }
+
+    @Override
+    public SeriesResponse update(Long id, SeriesRequest request) {
+        SeriesEntity entity = repository.getReferenceById(id);
+        mapper.updateEntity(entity, mapper.convertDtoToEntity(request));
+        SeriesEntity updatedEntity = repository.save(entity);
+        return mapper.convertEntityToDto(updatedEntity);
     }
 
 

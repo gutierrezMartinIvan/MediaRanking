@@ -10,6 +10,8 @@ import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.models.response.SeriesResponse;
+import org.modelmapper.Condition;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,5 +72,22 @@ public class DtoToEntityConverter {
             set.add( modelMapper.map(genre, GenreEntity.class));
         }
         return set;
+    }
+
+    public void updateEntity(SeriesEntity savedSeries, SeriesEntity updatedSeries) {
+        if (updatedSeries.getAuthor() != null)
+            savedSeries.setAuthor(updatedSeries.getAuthor());
+
+        if (updatedSeries.getTitle() != null)
+            savedSeries.setTitle(updatedSeries.getTitle());
+
+        if (updatedSeries.getDescription() != null)
+            savedSeries.setDescription(updatedSeries.getDescription());
+
+        if (updatedSeries.getYear() != null)
+            savedSeries.setYear(updatedSeries.getYear());
+
+        if (updatedSeries.getGenres() != null)
+            savedSeries.setGenres(updatedSeries.getGenres());
     }
 }

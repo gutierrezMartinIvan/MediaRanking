@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -11,5 +12,5 @@ public class SeriesFilter {
     private String title;
     private String author;
     private Integer year;
-    private List<String> genres;
+    private Set<String> genres;
 }

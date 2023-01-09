@@ -5,14 +5,13 @@ import ar.com.mediaranking.models.repository.IGenreRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SeriesServiceConfig {
+public class MapperConfig {
 
     @Autowired
     private IGenreRepository genreRepository;

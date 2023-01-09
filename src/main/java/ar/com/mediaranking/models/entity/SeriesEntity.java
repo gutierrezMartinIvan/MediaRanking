@@ -21,7 +21,6 @@ public class SeriesEntity {
     @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")
     @NotEmpty(message = "Tittle can not be empty")
-    @Pattern(regexp =  "^[A-Za-z0-9!@#$%^&*()_+=-]*$", message = "Tittle only can contain letters, numbers and special characters")
     private String title;
     @Column(nullable = false)
     @NotNull(message = "Description can not be null")

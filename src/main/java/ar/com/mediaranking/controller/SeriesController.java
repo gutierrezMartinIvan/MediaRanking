@@ -3,17 +3,17 @@ package ar.com.mediaranking.controller;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
+import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/series")
@@ -21,56 +21,57 @@ import java.util.List;
 public class SeriesController {
 
     @Autowired
-    private ISeriesService service;
+    private ISeriesService seriesService;
 
-    @Transactional
-    @Operation(summary = "Creates a new series")
-    @PostMapping
-    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
-        SeriesResponse response = new SeriesResponse();
-
-        if (service.isNull(request))
-            return ResponseEntity.badRequest().body(response);
-
-        response = service.save(request);
-
-        return ResponseEntity.created(null).body(response);
-    }
+    @Autowired
+    private IReviewService reviewService;
 
     @Operation(summary = "Get all series")
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<SeriesResponse>> getAllSeries() {
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(seriesService.getAll());
+    }
+
+    @Operation(summary = "Get series by filters")
+    @GetMapping("/filter")
+    public ResponseEntity<List<SeriesResponse>> getSeriesByFilters(@RequestParam(required = false) String title,
+                                                                   @RequestParam(required = false) String author,
+                                                                   @RequestParam(required = false) Set<String> genres,
+                                                                   @RequestParam(required = false) Integer year
+    ) {
+        List<SeriesResponse> responses = seriesService.getByFilters(title, author, genres, year);
+        return ResponseEntity.ok(responses);
     }
 
     @Operation(summary = "Get a serie byy its ID")
     @GetMapping("/{id}")
-    public ResponseEntity<SeriesResponse> getSerieById(@RequestParam Long id) {
-        return ResponseEntity.ok(service.getSerieById(id));
+    public ResponseEntity<SeriesResponse> getSeriesById(@RequestParam Long id) {
+        return ResponseEntity.ok(seriesService.getSerieById(id));
     }
 
-    @Operation(summary = "Get a serie by filters")
-    @GetMapping("/filter")
-    public ResponseEntity<List<SeriesResponse>> getDetailsByFilters(
-            @RequestParam(required = false) String tittle,
-            @RequestParam(required = false) String author,
-            @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) List<String> genres
-    ) {
-        List<SeriesResponse> series = service.getByFilters(tittle, author, genres, year);
-        return ResponseEntity.ok(series);
+    @Transactional
+    @PostMapping("/save")
+    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
+        return ResponseEntity.ok(seriesService.save(request));
     }
 
     @Operation(summary = "Delete a serie by its ID")
     @DeleteMapping("/delete/{id}")
     public void deleteSerieById(@RequestParam Long id) {
-        service.deleteSerieById(id);
+        seriesService.deleteSerieById(id);
+    }
+
+    @Operation(summary = "Update a series by its ID")
+    @PutMapping("/update/{id}")
+    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesRequest request) {
+        SeriesResponse response = seriesService.update(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Insert a review in a series")
     @PostMapping("/review/{id}")
     public ResponseEntity<SeriesResponse> insertReviewInSeries(@RequestParam Long id, @RequestBody ReviewRequest review) {
-        SeriesResponse response = service.insertReview2Series(id, review);
+        SeriesResponse response = seriesService.insertReview2Series(id, review);
         return ResponseEntity.ok(response);
     }
 }
