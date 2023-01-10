@@ -1,12 +1,9 @@
 package ar.com.mediaranking.controller;
 
-import ar.com.mediaranking.models.entity.MovieEntity;
-import ar.com.mediaranking.models.entity.ReviewEntity;
-import ar.com.mediaranking.models.repository.MovieRepository;
+
 import ar.com.mediaranking.models.request.MovieRequest;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
-import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +42,9 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
-        return ResponseEntity.ok( service.findById(id) );
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id, @RequestParam(required = false) String orderReview) {
+        // TODO Check order if ASC or DES
+        return ResponseEntity.ok( service.findById(id, orderReview) );
     }
 
     @PostMapping

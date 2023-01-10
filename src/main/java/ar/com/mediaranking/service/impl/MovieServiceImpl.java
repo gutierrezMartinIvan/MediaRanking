@@ -5,30 +5,24 @@ import ar.com.mediaranking.exception.SeriesNotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
-import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
-import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.Set;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
+
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -82,8 +76,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse findById(Long id){
-        return mapper.convertEntityToDto(repository.findById(id).orElse(null));
+    public MovieResponse findById(Long id, String orderReviews ) {
+        MovieEntity movie = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Movie with id: " + id + " not found"));
+
+        /*
+        // TODO find better way to implement this
+        List<ReviewEntity> reviewList = reviewService.findAllByMovieId(movie, orderReviews);
+        movie.setReviews(reviewList);
+        */
+        return mapper.convertEntityToDto(movie);
     }
 
     @Override
@@ -119,7 +120,6 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
         Specification<List<MovieEntity>> spec = where(null);
 
-        String orderReviews = "ASC";
 
         if(title != null){
             spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
@@ -144,7 +144,6 @@ public class MovieServiceImpl implements MovieService {
                 return in;
             });
         }
-
 
         return mapper.convertMoviesToDto(repository.findAll(spec));
 

@@ -9,7 +9,10 @@ import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReviewServiceImpl implements IReviewService {
@@ -39,6 +42,17 @@ public class ReviewServiceImpl implements IReviewService {
         entitySaved.setMovies(movie);
         repository.save(entitySaved);
         return entitySaved;
+    }
+
+    public List<ReviewEntity> findAllByMovieId(MovieEntity id, String order){
+        if(order == null){
+            return repository.findAllByMovies(id);
+        }
+        if(order.equals("ASC")){
+            return repository.findAllByMovies(id, Sort.by(Sort.Direction.ASC, "rating"));
+        }
+        return repository.findAllByMovies(id, Sort.by(Sort.Direction.DESC, "rating"));
+
     }
 }
 
