@@ -7,6 +7,7 @@ import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
+import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
@@ -115,6 +116,24 @@ public class SeriesServiceImpl implements ISeriesService {
 
         SeriesEntity updatedEntity = repository.save(entity);
         return mapper.convertEntityToDto(updatedEntity);
+    }
+
+    @Override
+    public SeriesResponse addSeasonsToSeries(Long id, List<SeasonRequest> seasons) {
+        SeriesEntity entity = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("There is not a series with the id: " + id));
+        entity.getSeasons().addAll(seasonService.save(seasons, entity));
+
+        return mapper.convertEntityToDto(repository.save(entity));
+
+    }
+
+    @Override
+    public SeriesResponse addEpisodesToSeason(Long seasonId, List<EpisodeRequest> episodes) {
+
+        SeasonEntity season = seasonService.addEpisodesToSeason(seasonId, episodes);
+        return mapper.convertEntityToDto(repository.findBySeasons(season));
+
     }
 
 

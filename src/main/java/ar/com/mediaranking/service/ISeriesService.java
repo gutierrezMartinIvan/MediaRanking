@@ -1,6 +1,8 @@
 package ar.com.mediaranking.service;
 
 import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.SeasonRequest;
+import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 
@@ -24,4 +26,8 @@ public interface ISeriesService {
     SeriesResponse insertReview2Series(Long id, ReviewRequest review);
 
     SeriesResponse update(Long id, SeriesRequest request);
+
+    SeriesResponse addSeasonsToSeries(Long id, List<SeasonRequest> seasons);
+
+    SeriesResponse addEpisodesToSeason(Long seasonId, List<EpisodeRequest> episodes);
 }

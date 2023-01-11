@@ -1,6 +1,8 @@
 package ar.com.mediaranking.controller;
 
+import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
@@ -76,4 +78,17 @@ public class SeriesController {
         SeriesResponse response = seriesService.insertReview2Series(id, review);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{id}/seasons")
+    public ResponseEntity<SeriesResponse> addSeasonsToSeries(@PathVariable Long id, @RequestBody @Valid List<SeasonRequest> seasons) {
+        SeriesResponse response = seriesService.addSeasonsToSeries(id, seasons);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/seasons/{seasonId}/episodes")
+    public ResponseEntity<SeriesResponse> addEpisodesToSeason(@PathVariable Long seasonId, @RequestBody @Valid List<EpisodeRequest> episodes) {
+        SeriesResponse response = seriesService.addEpisodesToSeason(seasonId, episodes);
+        return ResponseEntity.ok(response);
+    }
+
 }
