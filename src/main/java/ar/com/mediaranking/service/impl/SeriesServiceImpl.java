@@ -2,19 +2,23 @@ package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.ReviewEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
 import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
+import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +38,9 @@ public class SeriesServiceImpl implements ISeriesService {
     @Autowired
     private IReviewService reviewService;
 
+    @Autowired
+    private SeasonService seasonService;
+
     @Override
     public boolean isNull(SeriesRequest request) {
         return false;
@@ -41,10 +48,15 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
-        SeriesEntity entity = mapper.convertDtoToEntity(request);
-        SeriesEntity entitySave = repository.save(entity);
-        SeriesResponse response = mapper.convertEntityToDto(entitySave);
-        return response;
+        SeriesEntity entitySave = repository.save(mapper.convertDtoToEntity(request));
+
+        List<SeasonEntity> seasons = new ArrayList<>();
+        for (SeasonRequest season : request.getSeasons()) {
+            seasons.add(seasonService.save(season, entitySave));
+        }
+        entitySave.setSeasons(seasons);
+
+        return mapper.convertEntityToDto(repository.save(entitySave));
     }
 
     @Override

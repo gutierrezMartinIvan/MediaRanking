@@ -43,5 +43,5 @@ public class SeriesResponse {
     @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
     List<String> genres;
 
-    List<SeasonEntity> seasons;
+    List<SeasonResponse> seasons;
 }

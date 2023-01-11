@@ -1,8 +1,13 @@
 package ar.com.mediaranking.config;
 
 import ar.com.mediaranking.models.entity.GenreEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
+import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.repository.IGenreRepository;
+import ar.com.mediaranking.models.request.SeasonRequest;
+import ar.com.mediaranking.models.request.SeriesRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -20,6 +25,11 @@ public class MapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper mm = new ModelMapper();
         //mm.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        /*mm.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        mm.typeMap(SeriesRequest.class, SeriesEntity.class)
+                .addMappings(mapper -> mapper.skip(SeriesEntity::setSeasons));
+        mm.typeMap(SeasonRequest.class, SeasonEntity.class)
+                .addMappings(mapper -> mapper.skip(SeasonEntity::setEpisodes));*/
 
         mm.addConverter(new Converter<String, GenreEntity>() {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
@@ -36,6 +46,7 @@ public class MapperConfig {
                 return StringUtils.capitalize(context.getSource().getName().toLowerCase());
             }
         });
+
 
         return mm;
     }

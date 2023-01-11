@@ -52,7 +52,8 @@ public class SeriesController {
 
     @Transactional
     @PostMapping("/save")
-    public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
+    //TODO: Add validation
+    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
         return ResponseEntity.ok(seriesService.save(request));
     }
 

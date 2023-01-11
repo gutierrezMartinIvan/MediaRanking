@@ -1,12 +1,7 @@
 package ar.com.mediaranking.utils;
 
-import ar.com.mediaranking.models.entity.GenreEntity;
-import ar.com.mediaranking.models.entity.MovieEntity;
-import ar.com.mediaranking.models.entity.ReviewEntity;
-import ar.com.mediaranking.models.entity.SeriesEntity;
-import ar.com.mediaranking.models.request.MovieRequest;
-import ar.com.mediaranking.models.request.ReviewRequest;
-import ar.com.mediaranking.models.request.SeriesRequest;
+import ar.com.mediaranking.models.entity.*;
+import ar.com.mediaranking.models.request.*;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.models.response.SeriesResponse;
@@ -100,5 +95,13 @@ public class DtoToEntityConverter {
 
         if (updatedSeries.getGenres() != null)
             savedSeries.setGenres(updatedSeries.getGenres());
+    }
+
+    public SeasonEntity convertDtoToEntity(SeasonRequest season) {
+        return modelMapper.map(season, SeasonEntity.class);
+    }
+
+    public EpisodeEntity convertDtoToEntity(EpisodeRequest episode) {
+        return modelMapper.map(episode, EpisodeEntity.class);
     }
 }
