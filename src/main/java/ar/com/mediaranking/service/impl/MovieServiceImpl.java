@@ -145,7 +145,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse insertReview2Movie(Long id, ReviewRequest review) {
-        MovieEntity entity = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("There is not a movie with the id: " + id));
+        MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
 
         ReviewEntity reviewSaved = reviewService.saveMovie(review, entity);
         entity.getReviews().add(reviewSaved);
