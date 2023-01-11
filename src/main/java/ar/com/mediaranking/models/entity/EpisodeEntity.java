@@ -17,7 +17,6 @@ public class EpisodeEntity {
     @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")
     @NotEmpty(message = "Tittle can not be empty")
-    @Pattern(regexp =  "^[A-Za-z0-9!@#$%^&*()_+=-]*$", message = "Tittle only can contain letters, numbers and special characters")
     String title;
 
     @Column(nullable = false)

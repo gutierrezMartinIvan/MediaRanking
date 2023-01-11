@@ -50,11 +50,10 @@ public class SeriesServiceImpl implements ISeriesService {
     public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
         SeriesEntity entitySave = repository.save(mapper.convertDtoToEntity(request));
 
-        List<SeasonEntity> seasons = new ArrayList<>();
-        for (SeasonRequest season : request.getSeasons()) {
-            seasons.add(seasonService.save(season, entitySave));
+
+        for (SeasonEntity season : entitySave.getSeasons()) {
+            seasonService.save(season, entitySave);
         }
-        entitySave.setSeasons(seasons);
 
         return mapper.convertEntityToDto(repository.save(entitySave));
     }
