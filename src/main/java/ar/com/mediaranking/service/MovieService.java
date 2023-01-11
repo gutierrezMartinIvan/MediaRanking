@@ -20,7 +20,7 @@ public interface MovieService {
 
     void deleteById(long id);
 
-    MovieResponse findById(Long id, String orderReviews);
+    MovieResponse findById(Long id);
 
     MovieResponse update(long id, MovieRequest movie);
 

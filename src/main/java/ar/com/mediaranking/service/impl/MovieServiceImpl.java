@@ -76,14 +76,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse findById(Long id, String orderReviews ) {
+    public MovieResponse findById(Long id) {
         MovieEntity movie = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Movie with id: " + id + " not found"));
-
-        /*
-        // TODO find better way to implement this
-        List<ReviewEntity> reviewList = reviewService.findAllByMovieId(movie, orderReviews);
-        movie.setReviews(reviewList);
-        */
         return mapper.convertEntityToDto(movie);
     }
 
