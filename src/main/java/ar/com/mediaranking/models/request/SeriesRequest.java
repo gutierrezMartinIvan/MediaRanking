@@ -44,4 +44,6 @@ public class SeriesRequest {
     @NotNull(message = "Genres can not be null")
     @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
     Set<String> genres = new HashSet<>();
+
+    List<SeasonRequest> seasons;
 }

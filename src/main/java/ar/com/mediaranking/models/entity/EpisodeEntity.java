@@ -18,7 +18,7 @@ public class EpisodeEntity {
     @NotBlank(message = "Tittle can not be blank")
     @NotEmpty(message = "Tittle can not be empty")
     @Pattern(regexp =  "^[A-Za-z0-9!@#$%^&*()_+=-]*$", message = "Tittle only can contain letters, numbers and special characters")
-    String tittle;
+    String title;
 
     @Column(nullable = false)
     @NotNull(message = "Description can not be null")
@@ -31,9 +31,10 @@ public class EpisodeEntity {
     @Max(value=99)
     @NotNull(message = "Description can not be null")
     Integer episodeNumber;
-    /*
+
+
     @ManyToOne
-    @JoinColumn(name = "season_entity_season_id")
-    private SeasonEntity seasonEntity;*/
+    @JoinColumn(name = "season_id")
+    private SeasonEntity season;
 
 }
