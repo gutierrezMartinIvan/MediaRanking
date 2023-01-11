@@ -43,9 +43,8 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id, @RequestParam(required = false) String orderReview) {
-        // TODO Check order if ASC or DES
-        return ResponseEntity.ok( service.findById(id, orderReview) );
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping

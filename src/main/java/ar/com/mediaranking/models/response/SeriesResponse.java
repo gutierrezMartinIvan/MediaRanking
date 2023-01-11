@@ -41,6 +41,4 @@ public class SeriesResponse {
     @NotNull(message = "Genres can not be null")
     @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
     List<String> genres;
-    @Schema(description = "Reviews of the series")
-    private List<ReviewResponse> reviews;
 }

@@ -52,7 +52,7 @@ public class MovieEntity {
     Integer  year;
 
 
-    @OneToMany(mappedBy = "movies")
+    @OneToMany(mappedBy = "movies", fetch = FetchType.LAZY)
     List<ReviewEntity> reviews = new ArrayList<>();
 
 }

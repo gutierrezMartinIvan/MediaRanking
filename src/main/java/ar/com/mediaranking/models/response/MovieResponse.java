@@ -48,5 +48,4 @@ public class MovieResponse {
     @Schema(example = "2010")
     Integer year;
 
-    List<ReviewResponse> reviews;
 }

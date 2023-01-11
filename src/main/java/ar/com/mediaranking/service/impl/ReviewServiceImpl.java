@@ -1,9 +1,12 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.SeriesNotFoundException;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.repository.IReviewRepository;
+import ar.com.mediaranking.models.repository.ISeriesRepository;
+import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.service.IReviewService;
@@ -19,8 +22,17 @@ public class ReviewServiceImpl implements IReviewService {
 
     @Autowired
     private IReviewRepository repository;
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private IReviewRepository reviewRepository;
+
     @Autowired
     private DtoToEntityConverter mapper;
+    @Autowired
+    private ISeriesRepository seriesRepository;
 
     @Override
     public ReviewEntity save(ReviewRequest reviewRequest) {
@@ -44,15 +56,42 @@ public class ReviewServiceImpl implements IReviewService {
         return entitySaved;
     }
 
-    public List<ReviewEntity> findAllByMovieId(MovieEntity id, String order){
-        if(order == null){
-            return repository.findAllByMovies(id);
+    private Sort getSort(String order, String field) {
+        if(order == null || order.isEmpty()) {
+            return null;
+        }else if (order.equalsIgnoreCase("asc")) {
+            return Sort.by(Sort.Direction.ASC, field);
         }
-        if(order.equals("ASC")){
-            return repository.findAllByMovies(id, Sort.by(Sort.Direction.ASC, "rating"));
-        }
-        return repository.findAllByMovies(id, Sort.by(Sort.Direction.DESC, "rating"));
+
+        return Sort.by(Sort.Direction.DESC, field);
 
     }
+
+    @Override
+    public List<ReviewResponse> findAllByMovieId(Long id, String order) {
+        Sort sort = getSort(order, "rating");
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Movie with id: " + id + " not found"));
+
+
+        return mapper.convertReviewsToDto(repository.findAllByMovies(movie, sort));
+    }
+
+    @Override
+    public List<ReviewResponse>  findAllBySeriesId(Long id, String order){
+        Sort sort = getSort(order, "rating");
+        SeriesEntity series = seriesRepository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Series with id: " + id + " not found"));
+        return mapper.convertReviewsToDto(repository.findAllBySeries(series, sort));
+    }
+
+    @Override
+    public List<ReviewResponse>  findAllByUserId(String id){
+        return mapper.convertReviewsToDto(repository.findAllByUserId(id));
+    }
+
+    @Override
+    public ReviewResponse update(Long id, ReviewRequest reviewRequest){
+        return null;
+    }
+
 }
 

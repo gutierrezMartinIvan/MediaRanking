@@ -67,6 +67,13 @@ public class DtoToEntityConverter {
             return modelMapper.map(entity, ReviewResponse.class);
     }
 
+    public List<ReviewResponse> convertReviewsToDto(List<ReviewEntity> entities) {
+        return entities.stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+
     public Set<GenreEntity> convertSetStringToGenre(Set<String> genres) {
         if (genres == null) {
             return null;
