@@ -1,6 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
-import ar.com.mediaranking.exception.SeriesNotFoundException;
+import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
@@ -70,7 +70,7 @@ public class ReviewServiceImpl implements IReviewService {
     @Override
     public List<ReviewResponse> findAllByMovieId(Long id, String order) {
         Sort sort = getSort(order, "rating");
-        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Movie with id: " + id + " not found"));
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new NotFoundException("Movie with id: " + id + " not found"));
 
 
         return mapper.convertReviewsToDto(repository.findAllByMovies(movie, sort));
@@ -79,7 +79,7 @@ public class ReviewServiceImpl implements IReviewService {
     @Override
     public List<ReviewResponse>  findAllBySeriesId(Long id, String order){
         Sort sort = getSort(order, "rating");
-        SeriesEntity series = seriesRepository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Series with id: " + id + " not found"));
+        SeriesEntity series = seriesRepository.findById(id).orElseThrow(() -> new NotFoundException("Series with id: " + id + " not found"));
         return mapper.convertReviewsToDto(repository.findAllBySeries(series, sort));
     }
 
