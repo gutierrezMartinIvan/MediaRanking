@@ -15,7 +15,12 @@ public interface IReviewService {
 
     ReviewEntity saveMovie(ReviewRequest review, MovieEntity movieEntity);
 
-    List<ReviewEntity> findAllByMovieId(MovieEntity id, String order);
+    List<ReviewResponse> findAllByMovieId(Long id, String order);
 
 
+    List<ReviewResponse>  findAllBySeriesId(Long id, String order);
+
+    List<ReviewResponse>  findAllByUserId(String id);
+
+    ReviewResponse update(Long id, ReviewRequest reviewRequest);
 }
