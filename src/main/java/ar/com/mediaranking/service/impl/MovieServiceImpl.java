@@ -1,7 +1,7 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.MovieAlreadyExistsException;
-import ar.com.mediaranking.exception.SeriesNotFoundException;
+import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
@@ -77,7 +77,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse findById(Long id, String orderReviews ) {
-        MovieEntity movie = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("Movie with id: " + id + " not found"));
+        MovieEntity movie = repository.findById(id).orElseThrow(() -> new NotFoundException("Movie with id: " + id + " not found"));
 
         /*
         // TODO find better way to implement this
@@ -89,8 +89,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse update(long id, MovieRequest movie){
-        // TODO: change exception name
-        MovieEntity entity = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("There is not a movie with the id: " + id));
+
+        MovieEntity entity = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("There is not a movie with the id: " + id));
 
         if(movie.getTitle() != null && !movie.getTitle().isBlank()){
             entity.setTitle(movie.getTitle());
@@ -151,7 +152,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse insertReview2Movie(Long id, ReviewRequest review) {
-        MovieEntity entity = repository.findById(id).orElseThrow(() -> new SeriesNotFoundException("There is not a movie with the id: " + id));
+        MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
 
         ReviewEntity reviewSaved = reviewService.saveMovie(review, entity);
         entity.getReviews().add(reviewSaved);

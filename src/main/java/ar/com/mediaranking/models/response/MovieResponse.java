@@ -41,12 +41,12 @@ public class MovieResponse {
     @Min(value=1)
     @Max(value=9999)
     @Schema(example = "138")
-    int  duration;
+    Integer duration;
 
     @Min(value=1800)
     @Max(value=2300)
     @Schema(example = "2010")
-    int  year;
+    Integer year;
 
     List<ReviewResponse> reviews;
 }

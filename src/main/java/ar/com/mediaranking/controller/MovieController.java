@@ -6,6 +6,7 @@ import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,12 +49,12 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieResponse> createMovie(@RequestBody MovieRequest movie) {
+    public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest movie) {
         return ResponseEntity.ok(service.save(movie));
     }
 
     @PostMapping("/list")
-    public ResponseEntity<List<MovieResponse>> createMovieList(@RequestBody List<MovieRequest> movieList) {
+    public ResponseEntity<List<MovieResponse>> createMovieList(@Valid @RequestBody List<MovieRequest> movieList) {
         return ResponseEntity.ok(service.saveList(movieList));
     }
 
@@ -68,7 +69,7 @@ public class MovieController {
     }
 
     @PostMapping("/{id}/review")
-    public ResponseEntity<MovieResponse> addReview(@PathVariable long id, @RequestBody ReviewRequest review) {
+    public ResponseEntity<MovieResponse> addReview(@Valid @PathVariable long id, @RequestBody ReviewRequest review) {
         return ResponseEntity.ok(service.insertReview2Movie(id, review));
     }
 }
