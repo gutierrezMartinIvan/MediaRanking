@@ -8,6 +8,7 @@ import ar.com.mediaranking.service.ISeriesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,21 +44,21 @@ public class SeriesController {
         return ResponseEntity.ok(responses);
     }
 
-    @Operation(summary = "Get a serie byy its ID")
+    @Operation(summary = "Get a series by its ID")
     @GetMapping("/{id}")
-    public ResponseEntity<SeriesResponse> getSeriesById(@RequestParam Long id) {
+    public ResponseEntity<SeriesResponse> getSeriesById(@PathVariable Long id) {
         return ResponseEntity.ok(seriesService.getSerieById(id));
     }
 
     @Transactional
     @PostMapping("/save")
-    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
+    public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
         return ResponseEntity.ok(seriesService.save(request));
     }
 
-    @Operation(summary = "Delete a serie by its ID")
+    @Operation(summary = "Delete a series by its ID")
     @DeleteMapping("/delete/{id}")
-    public void deleteSerieById(@RequestParam Long id) {
+    public void deleteSerieById(@PathVariable Long id) {
         seriesService.deleteSerieById(id);
     }
 
@@ -70,7 +71,7 @@ public class SeriesController {
 
     @Operation(summary = "Insert a review in a series")
     @PostMapping("/review/{id}")
-    public ResponseEntity<SeriesResponse> insertReviewInSeries(@RequestParam Long id, @RequestBody ReviewRequest review) {
+    public ResponseEntity<SeriesResponse> insertReviewInSeries( @PathVariable Long id, @RequestBody ReviewRequest review) {
         SeriesResponse response = seriesService.insertReview2Series(id, review);
         return ResponseEntity.ok(response);
     }

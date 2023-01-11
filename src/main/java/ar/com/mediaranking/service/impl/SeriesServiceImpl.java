@@ -1,6 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
-import ar.com.mediaranking.exception.SeriesNotFoundException;
+import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
@@ -8,7 +8,6 @@ import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
-import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
@@ -56,7 +55,7 @@ public class SeriesServiceImpl implements ISeriesService {
     @Override
     public SeriesResponse getSerieById(Long id) {
         return mapper.convertEntityToDto(repository.findById(id).
-                orElseThrow(() -> new SeriesNotFoundException("There is not a series with the id: " + id)));
+                orElseThrow(() -> new NotFoundException("There is not a series with the id: " + id)));
     }
 
     @Override
@@ -88,8 +87,21 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public SeriesResponse update(Long id, SeriesRequest request) {
-        SeriesEntity entity = repository.getReferenceById(id);
-        mapper.updateEntity(entity, mapper.convertDtoToEntity(request));
+        SeriesEntity entity = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("There is not a series with the id: " + id));
+
+        if(request.getTitle() != null && !request.getTitle().isBlank())
+            entity.setTitle(request.getTitle());
+
+        if(request.getAuthor() != null && !request.getAuthor().isBlank())
+            entity.setAuthor(request.getAuthor());
+
+        if(request.getGenres() != null && !request.getGenres().isEmpty())
+            entity.setGenres(mapper.convertSetStringToGenre(request.getGenres()));
+
+        if(request.getYear() != null && request.getYear() > 0)
+            entity.setYear(request.getYear());
+
         SeriesEntity updatedEntity = repository.save(entity);
         return mapper.convertEntityToDto(updatedEntity);
     }
