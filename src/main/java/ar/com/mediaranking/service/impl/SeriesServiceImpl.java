@@ -2,19 +2,22 @@ package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.ReviewEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
-import ar.com.mediaranking.models.request.ReviewRequest;
-import ar.com.mediaranking.models.request.SeriesRequest;
+import ar.com.mediaranking.models.request.*;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
+import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +37,9 @@ public class SeriesServiceImpl implements ISeriesService {
     @Autowired
     private IReviewService reviewService;
 
+    @Autowired
+    private SeasonService seasonService;
+
     @Override
     public boolean isNull(SeriesRequest request) {
         return false;
@@ -41,10 +47,14 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
-        SeriesEntity entity = mapper.convertDtoToEntity(request);
-        SeriesEntity entitySave = repository.save(entity);
-        SeriesResponse response = mapper.convertEntityToDto(entitySave);
-        return response;
+        SeriesEntity entitySave = repository.save(mapper.convertDtoToEntity(request));
+
+
+        for (SeasonEntity season : entitySave.getSeasons()) {
+            seasonService.save(season, entitySave);
+        }
+
+        return mapper.convertEntityToDto(repository.save(entitySave));
     }
 
     @Override
@@ -92,6 +102,7 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
+    @Transactional
     public SeriesResponse update(Long id, SeriesRequest request) {
         SeriesEntity entity = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("There is not a series with the id: " + id));
@@ -108,7 +119,17 @@ public class SeriesServiceImpl implements ISeriesService {
         if(request.getYear() != null && request.getYear() > 0)
             entity.setYear(request.getYear());
 
+        if(request.getSeasons() != null && !request.getSeasons().isEmpty()) {
+            seasonService.deleteAll(entity.getSeasons());
+
+            entity.setSeasons(new ArrayList<>());
+            for (SeasonSeriesRequest episodeRequest : request.getSeasons()) {
+                SeasonEntity season = mapper.convertDtoToEntity(episodeRequest);
+                entity.getSeasons().add(seasonService.save(season, entity));
+            }
+        }
         SeriesEntity updatedEntity = repository.save(entity);
+
         return mapper.convertEntityToDto(updatedEntity);
     }
 

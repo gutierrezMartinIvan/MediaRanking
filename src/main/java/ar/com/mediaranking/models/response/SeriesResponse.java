@@ -2,6 +2,7 @@ package ar.com.mediaranking.models.response;
 
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
@@ -41,4 +42,6 @@ public class SeriesResponse {
     @NotNull(message = "Genres can not be null")
     @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
     List<String> genres;
+
+    List<SeasonResponse> seasons;
 }

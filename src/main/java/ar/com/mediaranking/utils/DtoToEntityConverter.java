@@ -1,20 +1,14 @@
 package ar.com.mediaranking.utils;
 
-import ar.com.mediaranking.models.entity.GenreEntity;
-import ar.com.mediaranking.models.entity.MovieEntity;
-import ar.com.mediaranking.models.entity.ReviewEntity;
-import ar.com.mediaranking.models.entity.SeriesEntity;
-import ar.com.mediaranking.models.request.MovieRequest;
-import ar.com.mediaranking.models.request.ReviewRequest;
-import ar.com.mediaranking.models.request.SeriesRequest;
-import ar.com.mediaranking.models.response.MovieResponse;
-import ar.com.mediaranking.models.response.ReviewResponse;
-import ar.com.mediaranking.models.response.SeriesResponse;
+import ar.com.mediaranking.models.entity.*;
+import ar.com.mediaranking.models.request.*;
+import ar.com.mediaranking.models.response.*;
 import org.modelmapper.Condition;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.HashSet;
 import java.util.List;
@@ -100,5 +94,29 @@ public class DtoToEntityConverter {
 
         if (updatedSeries.getGenres() != null)
             savedSeries.setGenres(updatedSeries.getGenres());
+    }
+
+    public SeasonEntity convertDtoToEntity(SeasonRequest season) {
+        return modelMapper.map(season, SeasonEntity.class);
+    }
+
+    public EpisodeEntity convertDtoToEntity(EpisodeRequest episode) {
+        return modelMapper.map(episode, EpisodeEntity.class);
+    }
+
+    public SeasonResponse convertEntityToDto(SeasonEntity season) {
+        return modelMapper.map(season, SeasonResponse.class);
+    }
+
+    public EpisodeResponse convertEntityToDto(EpisodeEntity episodeEntity) {
+        return modelMapper.map(episodeEntity, EpisodeResponse.class);
+    }
+
+    public EpisodeEntity convertDtoToEntity(EpisodeSeasonRequest episodeRequest) {
+        return modelMapper.map(episodeRequest, EpisodeEntity.class);
+    }
+
+    public SeasonEntity convertDtoToEntity(SeasonSeriesRequest episodeRequest) {
+        return modelMapper.map(episodeRequest, SeasonEntity.class);
     }
 }
