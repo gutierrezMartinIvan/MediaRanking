@@ -114,6 +114,8 @@ public class SeriesServiceImpl implements ISeriesService {
         if(request.getYear() != null && request.getYear() > 0)
             entity.setYear(request.getYear());
 
+        //TODO: update seasons and episodes
+
         SeriesEntity updatedEntity = repository.save(entity);
         return mapper.convertEntityToDto(updatedEntity);
     }
