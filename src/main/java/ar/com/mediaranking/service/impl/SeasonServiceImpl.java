@@ -93,19 +93,14 @@ public class SeasonServiceImpl implements SeasonService {
 
             season.setEpisodes(new ArrayList<>());
             for(EpisodeSeasonRequest episodeRequest : request.getEpisodes()) {
-                season.getEpisodes().add(mapper.convertDtoToEntity(episodeRequest));
+                EpisodeEntity episode = mapper.convertDtoToEntity(episodeRequest);
+                episode.setSeason(season);
+                season.getEpisodes().add(episodeRepository.save(episode));
             }
         }
         if(request.getDescription() != null) season.setDescription(request.getDescription());
 
         SeasonEntity savedSeason = repository.save(season);
-
-        if(request.getEpisodes() != null && !request.getEpisodes().isEmpty()) {
-            for(EpisodeEntity episode : savedSeason.getEpisodes()) {
-                episode.setSeason(savedSeason);
-                episodeRepository.save(episode);
-            }
-        }
 
         return mapper.convertEntityToDto(savedSeason);
     }

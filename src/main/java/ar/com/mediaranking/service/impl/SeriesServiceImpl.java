@@ -118,11 +118,8 @@ public class SeriesServiceImpl implements ISeriesService {
 
             entity.setSeasons(new ArrayList<>());
             for (SeasonSeriesRequest episodeRequest : request.getSeasons()) {
-                entity.getSeasons().add(mapper.convertDtoToEntity(episodeRequest));
-            }
-
-            for (SeasonEntity season : entity.getSeasons()) {
-                seasonService.save(season, entity);
+                SeasonEntity season = mapper.convertDtoToEntity(episodeRequest);
+                entity.getSeasons().add(seasonService.save(season, entity));
             }
         }
         SeriesEntity updatedEntity = repository.save(entity);
