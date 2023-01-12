@@ -68,6 +68,9 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public void deleteSerieById(Long id) {
+        Optional<SeriesEntity> seriesOptional = repository.findById(id);
+        if (!seriesOptional.isPresent())
+            throw new NotFoundException("There is not a series with the id: " + id);
         repository.deleteById(id);
     }
 
@@ -76,8 +79,11 @@ public class SeriesServiceImpl implements ISeriesService {
         SeriesEntity entityUpdated = null;
         Optional<SeriesEntity> seriesOptional = repository.findById(id);
 
+
         if (seriesOptional.isPresent())
             entityUpdated = seriesOptional.get();
+        else
+            throw new NotFoundException("There is not a series with the id: " + id);
 
         ReviewEntity reviewSaved = reviewService.saveSeries(review, seriesOptional.get());
         entityUpdated.getReviews().add(reviewSaved);
