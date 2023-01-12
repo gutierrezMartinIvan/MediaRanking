@@ -7,15 +7,13 @@ import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
-import ar.com.mediaranking.models.request.EpisodeRequest;
-import ar.com.mediaranking.models.request.ReviewRequest;
-import ar.com.mediaranking.models.request.SeasonRequest;
-import ar.com.mediaranking.models.request.SeriesRequest;
+import ar.com.mediaranking.models.request.*;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
 import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +96,7 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
+    @Transactional
     public SeriesResponse update(Long id, SeriesRequest request) {
         SeriesEntity entity = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("There is not a series with the id: " + id));
@@ -114,9 +113,20 @@ public class SeriesServiceImpl implements ISeriesService {
         if(request.getYear() != null && request.getYear() > 0)
             entity.setYear(request.getYear());
 
-        //TODO: update seasons and episodes
+        if(request.getSeasons() != null && !request.getSeasons().isEmpty()) {
+            seasonService.deleteAll(entity.getSeasons());
 
+            entity.setSeasons(new ArrayList<>());
+            for (SeasonSeriesRequest episodeRequest : request.getSeasons()) {
+                entity.getSeasons().add(mapper.convertDtoToEntity(episodeRequest));
+            }
+
+            for (SeasonEntity season : entity.getSeasons()) {
+                seasonService.save(season, entity);
+            }
+        }
         SeriesEntity updatedEntity = repository.save(entity);
+
         return mapper.convertEntityToDto(updatedEntity);
     }
 

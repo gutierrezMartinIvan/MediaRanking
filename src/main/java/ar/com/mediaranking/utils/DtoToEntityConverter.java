@@ -115,4 +115,8 @@ public class DtoToEntityConverter {
     public EpisodeEntity convertDtoToEntity(EpisodeSeasonRequest episodeRequest) {
         return modelMapper.map(episodeRequest, EpisodeEntity.class);
     }
+
+    public SeasonEntity convertDtoToEntity(SeasonSeriesRequest episodeRequest) {
+        return modelMapper.map(episodeRequest, SeasonEntity.class);
+    }
 }

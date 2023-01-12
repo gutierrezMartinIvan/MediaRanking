@@ -43,7 +43,7 @@ public class SeriesEntity {
     inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<GenreEntity> genres;
 
-    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("seasonNumber ASC")
     List<SeasonEntity> seasons;
 

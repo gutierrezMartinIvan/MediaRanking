@@ -20,4 +20,6 @@ public interface SeasonService {
     SeasonResponse update(Long id, SeasonRequest request);
 
     void delete(Long id);
+
+    void deleteAll(List<SeasonEntity> seasons);
 }

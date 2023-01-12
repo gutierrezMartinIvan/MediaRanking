@@ -115,5 +115,10 @@ public class SeasonServiceImpl implements SeasonService {
         repository.deleteById(id);
     }
 
+    @Override
+    public void deleteAll(List<SeasonEntity> seasons) {
+        repository.deleteAll(seasons);
+    }
+
 
 }
