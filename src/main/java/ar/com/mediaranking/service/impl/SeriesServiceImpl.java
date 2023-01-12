@@ -118,23 +118,5 @@ public class SeriesServiceImpl implements ISeriesService {
         return mapper.convertEntityToDto(updatedEntity);
     }
 
-    @Override
-    public SeriesResponse addSeasonsToSeries(Long id, List<SeasonRequest> seasons) {
-        SeriesEntity entity = repository.findById(id).orElseThrow(
-                () -> new NotFoundException("There is not a series with the id: " + id));
-        entity.getSeasons().addAll(seasonService.save(seasons, entity));
-
-        return mapper.convertEntityToDto(repository.save(entity));
-
-    }
-
-    @Override
-    public SeriesResponse addEpisodesToSeason(Long seasonId, List<EpisodeRequest> episodes) {
-
-        SeasonEntity season = seasonService.addEpisodesToSeason(seasonId, episodes);
-        return mapper.convertEntityToDto(repository.findBySeasons(season));
-
-    }
-
 
 }

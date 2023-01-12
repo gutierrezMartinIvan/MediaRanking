@@ -26,8 +26,4 @@ public interface ISeriesService {
     SeriesResponse insertReview2Series(Long id, ReviewRequest review);
 
     SeriesResponse update(Long id, SeriesRequest request);
-
-    SeriesResponse addSeasonsToSeries(Long id, List<SeasonRequest> seasons);
-
-    SeriesResponse addEpisodesToSeason(Long seasonId, List<EpisodeRequest> episodes);
 }

@@ -45,5 +45,6 @@ public class SeriesRequest {
     @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
     Set<String> genres = new HashSet<>();
 
-    List<SeasonRequest> seasons;
+    @Schema(description = "Series seasons, this field is optional")
+    List<SeasonSeriesRequest> seasons;
 }

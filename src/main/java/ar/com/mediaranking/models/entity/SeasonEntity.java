@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.core.annotation.Order;
+
 
 import java.util.List;
 @Entity
@@ -27,11 +29,12 @@ public class SeasonEntity {
 
     @Column(nullable = false)
     @Size(min = 1, max = 400)
-    String Description;
+    String description;
 
 
     @Column(nullable = false)
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
+    @OrderBy("episodeNumber ASC")
     List<EpisodeEntity> episodes;
 
     @ManyToOne

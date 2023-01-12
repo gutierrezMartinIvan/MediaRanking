@@ -44,6 +44,7 @@ public class SeriesEntity {
     private Set<GenreEntity> genres;
 
     @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
+    @OrderBy("seasonNumber ASC")
     List<SeasonEntity> seasons;
 
     @OneToMany(mappedBy = "series")

@@ -1,17 +1,13 @@
 package ar.com.mediaranking.models.request;
 
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class SeasonRequest {
+public class SeasonSeriesRequest {
     //Todo add validation
-    @Schema(description = "Series id", example = "1")
-    Long seriesId;
-
     @Schema(description = "Season number", example = "1")
     Integer seasonNumber;
 
@@ -21,5 +17,6 @@ public class SeasonRequest {
     @Schema(description = "Season description", example = "Season 1 description")
     String description;
 
+    @Schema(description = "Season episodes, this field is optional")
     List<EpisodeSeasonRequest> episodes;
 }
