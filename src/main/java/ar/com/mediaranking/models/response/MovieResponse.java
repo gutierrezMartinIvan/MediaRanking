@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -37,7 +36,7 @@ public class MovieResponse {
     String director;
 
     @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
-    private Set<String> genres = new HashSet<>();;
+    private Set<String> genres = new HashSet<>();
 
     @Min(value=1)
     @Max(value=9999)

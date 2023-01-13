@@ -1,8 +1,9 @@
 package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.SeasonRequest;
-import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.models.response.SeasonResponse;
+import ar.com.mediaranking.models.request.SeasonUpdateRequest;
+import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.service.SeasonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +26,20 @@ import java.util.List;
 public class SeasonController {
     @Autowired
     private SeasonService seasonService;
+
+    @GetMapping
+    public ResponseEntity<List<SeasonResponse>> getAllSeasons(@RequestParam(required = false) Long seriesId,
+                                                              @RequestParam(required = false) Integer seasonNumber,
+                                                              @RequestParam(required = false) Integer year,
+                                                              @RequestParam(required = false) String title
+                                                              ) {
+        return ResponseEntity.ok(seasonService.getAll(seriesId, seasonNumber, year, title));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SeasonResponse> getSeasonById(@PathVariable Long id) {
+        return ResponseEntity.ok(seasonService.getById(id));
+    }
 
     @Operation(
             summary = "Creates a new season",
@@ -73,7 +88,7 @@ public class SeasonController {
     )
     @Transactional
     @PutMapping("{id}")
-    public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @RequestBody SeasonRequest request) {
+    public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @RequestBody SeasonUpdateRequest request) {
         return ResponseEntity.ok(seasonService.update(id, request));
     }
 

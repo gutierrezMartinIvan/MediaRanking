@@ -1,8 +1,6 @@
 package ar.com.mediaranking.models.request;
 
-import ar.com.mediaranking.models.entity.GenreEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

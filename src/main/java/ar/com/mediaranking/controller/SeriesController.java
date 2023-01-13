@@ -3,8 +3,9 @@ package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
-import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.models.response.SeriesResponse;
+import ar.com.mediaranking.models.request.SeriesUpdateRequest;
+import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,9 +88,10 @@ public class SeriesController {
             }
     )
     @Transactional
-    @PostMapping
-    public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
-        return ResponseEntity.ok(seriesService.save(request));
+    @PostMapping()
+    //TODO: Add validation
+    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
+        return new ResponseEntity<>(seriesService.save(request), HttpStatus.CREATED);
     }
 
     @Operation(
@@ -121,26 +123,8 @@ public class SeriesController {
     )
     @Transactional
     @PutMapping("{id}")
-    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesRequest request) {
+    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesUpdateRequest request) {
         SeriesResponse response = seriesService.update(id, request);
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(
-            summary = "add a review to a series by its ID",
-            description = "In this feature you can add a review to a series by its ID"
-    )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Review added successfully!"),
-                    @ApiResponse(responseCode = "404", description = "Series not found!",
-                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-            }
-    )
-    @Transactional
-    @PostMapping("/{id}/review")
-    public ResponseEntity<SeriesResponse> insertReviewInSeries( @PathVariable Long id, @RequestBody ReviewRequest review) {
-        SeriesResponse response = seriesService.insertReview2Series(id, review);
         return ResponseEntity.ok(response);
     }
 

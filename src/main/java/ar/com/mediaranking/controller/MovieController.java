@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,7 +93,7 @@ public class MovieController {
     @Transactional
     @PostMapping
     public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest movie) {
-        return ResponseEntity.ok(service.save(movie));
+        return new ResponseEntity<>(service.save(movie), HttpStatus.CREATED);
     }
     @Operation(
             summary = "Save movie by its ID",
@@ -142,22 +143,5 @@ public class MovieController {
     @PutMapping("/{id}")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id, @RequestBody MovieRequest movie) {
         return ResponseEntity.ok(service.update(id, movie));
-    }
-
-    @Operation(
-            summary = "add a review to a movie by its ID",
-            description = "In this feature you can add a review to a movie by its ID"
-    )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Review added successfully!"),
-                    @ApiResponse(responseCode = "404", description = "Movie not found!",
-                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-            }
-    )
-    @Transactional
-    @PostMapping("/{id}/review")
-    public ResponseEntity<MovieResponse> addReview(@Valid @PathVariable long id, @RequestBody ReviewRequest review) {
-        return ResponseEntity.ok(service.insertReview2Movie(id, review));
     }
 }

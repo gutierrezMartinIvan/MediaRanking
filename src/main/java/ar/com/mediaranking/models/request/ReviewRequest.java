@@ -7,14 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewRequest {
+
+    private Long entityId;
 
     @NotNull(message = "User ID can not be null")
     @NotBlank(message = "User ID can not be blank")

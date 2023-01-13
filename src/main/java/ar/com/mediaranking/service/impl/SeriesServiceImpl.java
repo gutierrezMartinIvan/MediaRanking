@@ -49,10 +49,12 @@ public class SeriesServiceImpl implements ISeriesService {
     public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
         SeriesEntity entitySave = repository.save(mapper.convertDtoToEntity(request));
 
-
-        for (SeasonEntity season : entitySave.getSeasons()) {
-            seasonService.save(season, entitySave);
+        if(request.getSeasons() != null) {
+            for (SeasonEntity season : entitySave.getSeasons()) {
+                seasonService.save(season, entitySave);
+            }
         }
+
 
         return mapper.convertEntityToDto(repository.save(entitySave));
     }
@@ -78,6 +80,7 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public void deleteSerieById(Long id) {
+        //TODO check impl
         Optional<SeriesEntity> seriesOptional = repository.findById(id);
         if (!seriesOptional.isPresent())
             throw new NotFoundException("There is not a series with the id: " + id);
@@ -85,25 +88,8 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
-    public SeriesResponse insertReview2Series(Long id, ReviewRequest review) {
-        SeriesEntity entityUpdated = null;
-        Optional<SeriesEntity> seriesOptional = repository.findById(id);
-
-
-        if (seriesOptional.isPresent())
-            entityUpdated = seriesOptional.get();
-        else
-            throw new NotFoundException("There is not a series with the id: " + id);
-
-        ReviewEntity reviewSaved = reviewService.saveSeries(review, seriesOptional.get());
-        entityUpdated.getReviews().add(reviewSaved);
-        repository.save(entityUpdated);
-        return mapper.convertEntityToDto(entityUpdated);
-    }
-
-    @Override
     @Transactional
-    public SeriesResponse update(Long id, SeriesRequest request) {
+    public SeriesResponse update(Long id, SeriesUpdateRequest request) {
         SeriesEntity entity = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("There is not a series with the id: " + id));
 
@@ -119,15 +105,6 @@ public class SeriesServiceImpl implements ISeriesService {
         if(request.getYear() != null && request.getYear() > 0)
             entity.setYear(request.getYear());
 
-        if(request.getSeasons() != null && !request.getSeasons().isEmpty()) {
-            seasonService.deleteAll(entity.getSeasons());
-
-            entity.setSeasons(new ArrayList<>());
-            for (SeasonSeriesRequest episodeRequest : request.getSeasons()) {
-                SeasonEntity season = mapper.convertDtoToEntity(episodeRequest);
-                entity.getSeasons().add(seasonService.save(season, entity));
-            }
-        }
         SeriesEntity updatedEntity = repository.save(entity);
 
         return mapper.convertEntityToDto(updatedEntity);

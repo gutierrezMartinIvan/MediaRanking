@@ -9,11 +9,6 @@ import ar.com.mediaranking.models.response.ReviewResponse;
 import java.util.List;
 
 public interface IReviewService {
-    ReviewEntity save(ReviewRequest reviewRequest);
-
-    ReviewEntity saveSeries(ReviewRequest review, SeriesEntity series);
-
-    ReviewEntity saveMovie(ReviewRequest review, MovieEntity movieEntity);
 
     List<ReviewResponse> findAllByMovieId(Long id, String order);
 
@@ -23,4 +18,8 @@ public interface IReviewService {
     List<ReviewResponse>  findAllByUserId(String id);
 
     ReviewResponse update(Long id, ReviewRequest reviewRequest);
+
+    ReviewResponse createReviewForMovie(ReviewRequest review);
+
+    ReviewResponse createReviewForSeries(ReviewRequest review);
 }

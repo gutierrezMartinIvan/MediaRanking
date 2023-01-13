@@ -1,13 +1,9 @@
 package ar.com.mediaranking.models.request;
 
-import ar.com.mediaranking.models.entity.SeasonEntity;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.springframework.web.bind.annotation.Mapping;
+
 
 @Data
 public class EpisodeRequest {

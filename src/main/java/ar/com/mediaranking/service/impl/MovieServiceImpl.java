@@ -106,13 +106,9 @@ public class MovieServiceImpl implements MovieService {
         return mapper.convertEntityToDto(updatedEntity);
     }
 
-    public List<MovieResponse> findByGenre(String genre){
-        return mapper.convertMoviesToDto(repository.findAllByGenres(genre));
-    }
-    
 
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
-        Specification<List<MovieEntity>> spec = where(null);
+        Specification<MovieEntity> spec = where(null);
 
 
         if(title != null){
@@ -143,14 +139,5 @@ public class MovieServiceImpl implements MovieService {
 
     }
 
-    @Override
-    public MovieResponse insertReview2Movie(Long id, ReviewRequest review) {
-        MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
-
-        ReviewEntity reviewSaved = reviewService.saveMovie(review, entity);
-        entity.getReviews().add(reviewSaved);
-        repository.save(entity);
-        return mapper.convertEntityToDto(entity);
-    }
 
 }

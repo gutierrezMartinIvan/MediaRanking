@@ -1,45 +1,38 @@
-package ar.com.mediaranking.models.response;
+package ar.com.mediaranking.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-public class SeriesResponse {
-
-    @Schema(example = "1")
-    Long id;
+public class SeriesUpdateRequest {
     @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")
     @NotEmpty(message = "Tittle can not be empty")
-    @Schema(description = "Series title", example = "Dragon Ball")
+    @Schema(description = "Series title", example = "Dragon Ball Super")
     String title;
 
     @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
     @NotEmpty(message = "Description can not be empty")
-    @Schema(example = "Goku saves the earth after...")
+    @Schema(description = "Series description", example = "In the year 1992, the two sides of....")
     String description;
 
     @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
     @NotEmpty(message = "Description can not be empty")
-    @Schema(example = "Akira")
+    @Schema(description = "Series author", example = "Akira Toriyama")
     String author;
 
-    @Column(nullable = false)
     @Min(value=1800)
     @Max(value=2023)
     @NotNull(message = "Description can not be null")
-    @Schema(example = "2010")
     Integer year;
 
     @NotNull(message = "Genres can not be null")
-    @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
-    List<String> genres;
-
-    List<SeasonResponse> seasons;
+    @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
+    Set<String> genres = new HashSet<>();
 }

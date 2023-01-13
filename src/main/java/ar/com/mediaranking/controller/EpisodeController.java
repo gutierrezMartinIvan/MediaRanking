@@ -28,6 +28,22 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
+    @GetMapping
+    public ResponseEntity<List<EpisodeResponse>> getAllEpisodes(@RequestParam(required = false) Long seriesId,
+                                                               @RequestParam(required = false) Long seasonId,
+                                                               @RequestParam(required = false) Integer seasonNumber,
+                                                               @RequestParam(required = false) Integer episodeNumber,
+                                                               @RequestParam(required = false) Integer year,
+                                                               @RequestParam(required = false) String title
+                                                               ) {
+        return ResponseEntity.ok(episodeService.getAll(seriesId, seasonId, seasonNumber, episodeNumber, year, title));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EpisodeResponse> getEpisodeById(@PathVariable Long id) {
+        return ResponseEntity.ok(episodeService.getById(id));
+    }
+
     @Operation(
             summary = "Create a new episode",
             description = "This feature lets register a new episode to the system"
@@ -40,10 +56,11 @@ public class EpisodeController {
             }
     )
     @Transactional
-    @PostMapping("/save")
-    public ResponseEntity<EpisodeResponse> createEpisode(@Valid @RequestBody EpisodeRequest request) {
+    @PostMapping
+    public ResponseEntity<EpisodeResponse> createEpisode(@RequestBody EpisodeRequest request) {
         return new ResponseEntity<>(episodeService.save(request), HttpStatus.CREATED);
     }
+
     @Operation(
             summary = "Save a list of new episodes",
             description = "This feature lets register a list of episodes to the system"
