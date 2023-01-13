@@ -27,9 +27,6 @@ public class ReviewServiceImpl implements IReviewService {
     private MovieRepository movieRepository;
 
     @Autowired
-    private IReviewRepository reviewRepository;
-
-    @Autowired
     private DtoToEntityConverter mapper;
     @Autowired
     private ISeriesRepository seriesRepository;
@@ -90,7 +87,16 @@ public class ReviewServiceImpl implements IReviewService {
 
     @Override
     public ReviewResponse update(Long id, ReviewRequest reviewRequest){
-        return null;
+        ReviewEntity review = repository.findById(id).orElseThrow(() -> new NotFoundException("Review with id: " + id + " not found"));
+
+        if(reviewRequest.getReview() != null) {
+            review.setReview(reviewRequest.getReview());
+        }
+        if(reviewRequest.getRating() != null) {
+            review.setRating(reviewRequest.getRating());
+        }
+
+        return mapper.convertEntityToDto(repository.save(review));
     }
 
 }
