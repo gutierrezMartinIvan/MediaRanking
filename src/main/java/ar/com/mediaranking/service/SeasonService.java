@@ -2,7 +2,6 @@ package ar.com.mediaranking.service;
 
 import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
-import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.response.SeasonResponse;
 

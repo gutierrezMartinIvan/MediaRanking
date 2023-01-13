@@ -35,7 +35,7 @@ public class MovieRequest {
     String director;
 
     @Schema(description = "Movie genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
-    private Set<String> genres = new HashSet<>();;
+    private Set<String> genres = new HashSet<>();
 
     @Min(value=1)
     @Max(value=9999)

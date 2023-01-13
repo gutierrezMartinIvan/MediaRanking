@@ -78,6 +78,7 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public void deleteSerieById(Long id) {
+        //TODO check impl
         Optional<SeriesEntity> seriesOptional = repository.findById(id);
         if (!seriesOptional.isPresent())
             throw new NotFoundException("There is not a series with the id: " + id);

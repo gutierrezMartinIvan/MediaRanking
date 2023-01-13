@@ -11,6 +11,4 @@ import java.util.List;
 @Repository
 public interface ISeriesRepository extends JpaRepository<SeriesEntity,Long> {
     List<SeriesEntity> findAll(Specification<SeriesEntity> spec);
-
-    SeriesEntity findBySeasons(SeasonEntity season);
 }

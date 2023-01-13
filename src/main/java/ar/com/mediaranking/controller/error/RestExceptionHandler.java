@@ -27,7 +27,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
-                Arrays.asList("Series Not Found")
+                List.of("Series Not Found")
         );
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
@@ -37,7 +37,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.CONFLICT,
                 ex.getMessage(),
-                Arrays.asList("Movie Already Exists")
+                List.of("Movie Already Exists")
         );
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }

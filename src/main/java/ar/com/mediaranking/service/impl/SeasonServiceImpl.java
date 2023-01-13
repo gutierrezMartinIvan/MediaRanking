@@ -7,7 +7,6 @@ import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.repository.EpisodeRepository;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.SeasonRepository;
-import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.EpisodeSeasonRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.response.SeasonResponse;

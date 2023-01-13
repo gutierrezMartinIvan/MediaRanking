@@ -1,6 +1,5 @@
 package ar.com.mediaranking.models.response;
 
-import ar.com.mediaranking.models.request.EpisodeRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

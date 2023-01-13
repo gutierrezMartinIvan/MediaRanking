@@ -3,12 +3,10 @@ package ar.com.mediaranking.utils;
 import ar.com.mediaranking.models.entity.*;
 import ar.com.mediaranking.models.request.*;
 import ar.com.mediaranking.models.response.*;
-import org.modelmapper.Condition;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.Mapping;
+
 
 import java.util.HashSet;
 import java.util.List;

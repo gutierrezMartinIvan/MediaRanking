@@ -1,6 +1,5 @@
 package ar.com.mediaranking.models.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,7 @@ public class ReviewEntity {
     @Column(nullable = false)
     @Min(value=1)
     @Max(value=10)
-    @NotNull(message = "raiting can not be null")
+    @NotNull(message = "rating can not be null")
     Integer rating;
 
     @ManyToOne

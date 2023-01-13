@@ -106,10 +106,6 @@ public class MovieServiceImpl implements MovieService {
         return mapper.convertEntityToDto(updatedEntity);
     }
 
-    public List<MovieResponse> findByGenre(String genre){
-        return mapper.convertMoviesToDto(repository.findAllByGenres(genre));
-    }
-    
 
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
         Specification<List<MovieEntity>> spec = where(null);

@@ -1,8 +1,6 @@
 package ar.com.mediaranking.service;
 
 import ar.com.mediaranking.models.request.ReviewRequest;
-import ar.com.mediaranking.models.request.SeasonRequest;
-import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 
