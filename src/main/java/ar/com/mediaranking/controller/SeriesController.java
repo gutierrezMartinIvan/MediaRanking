@@ -3,6 +3,7 @@ package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
+import ar.com.mediaranking.models.request.SeriesUpdateRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
@@ -66,7 +67,7 @@ public class SeriesController {
 
     @Operation(summary = "Update a series by its ID")
     @PutMapping("{id}")
-    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesRequest request) {
+    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesUpdateRequest request) {
         SeriesResponse response = seriesService.update(id, request);
         return ResponseEntity.ok(response);
     }

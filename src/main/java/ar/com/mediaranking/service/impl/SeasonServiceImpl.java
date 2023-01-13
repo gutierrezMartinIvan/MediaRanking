@@ -9,6 +9,7 @@ import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.SeasonRepository;
 import ar.com.mediaranking.models.request.EpisodeSeasonRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
+import ar.com.mediaranking.models.request.SeasonUpdateRequest;
 import ar.com.mediaranking.models.response.SeasonResponse;
 import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
@@ -77,8 +78,7 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     @Override
-    @Transactional
-    public SeasonResponse update(Long id, SeasonRequest request) {
+    public SeasonResponse update(Long id, SeasonUpdateRequest request) {
         SeasonEntity season = repository.findById(id).orElseThrow(() -> new NotFoundException("Season with ID: " + id +" not found"));
 
         if(request.getSeriesId() != null) {
@@ -88,16 +88,6 @@ public class SeasonServiceImpl implements SeasonService {
         }
         if(request.getTitle() != null) season.setTitle(request.getTitle());
         if(request.getSeasonNumber() != null) season.setSeasonNumber(request.getSeasonNumber());
-        if(request.getEpisodes() != null && !request.getEpisodes().isEmpty()) {
-            episodeRepository.deleteAll(season.getEpisodes());
-
-            season.setEpisodes(new ArrayList<>());
-            for(EpisodeSeasonRequest episodeRequest : request.getEpisodes()) {
-                EpisodeEntity episode = mapper.convertDtoToEntity(episodeRequest);
-                episode.setSeason(season);
-                season.getEpisodes().add(episodeRepository.save(episode));
-            }
-        }
         if(request.getDescription() != null) season.setDescription(request.getDescription());
 
         SeasonEntity savedSeason = repository.save(season);
