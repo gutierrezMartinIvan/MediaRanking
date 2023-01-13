@@ -18,4 +18,8 @@ public interface EpisodeService {
     EpisodeResponse update(Long id, EpisodeRequest request);
 
     void delete(Long id);
+
+    List<EpisodeResponse> getAll(Long seriesId, Long seasonId, Integer seasonNumber, Integer episodeNumber, Integer year, String title);
+
+    EpisodeResponse getById(Long id);
 }

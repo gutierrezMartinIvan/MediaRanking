@@ -117,4 +117,16 @@ public class DtoToEntityConverter {
     public SeasonEntity convertDtoToEntity(SeasonSeriesRequest episodeRequest) {
         return modelMapper.map(episodeRequest, SeasonEntity.class);
     }
+
+    public List<SeasonResponse> convertEntityToDto(List<SeasonEntity> all) {
+        return all.stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<EpisodeResponse> convertEpisodesToDto(List<EpisodeEntity> all) {
+        return all.stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
 }

@@ -3,6 +3,7 @@ package ar.com.mediaranking.service;
 import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.request.SeasonRequest;
+import ar.com.mediaranking.models.request.SeasonUpdateRequest;
 import ar.com.mediaranking.models.response.SeasonResponse;
 
 import java.util.List;
@@ -16,9 +17,13 @@ public interface SeasonService {
 
     List<SeasonResponse> save(List<SeasonRequest> request);
 
-    SeasonResponse update(Long id, SeasonRequest request);
+    SeasonResponse update(Long id, SeasonUpdateRequest request);
 
     void delete(Long id);
 
     void deleteAll(List<SeasonEntity> seasons);
+
+    List<SeasonResponse> getAll(Long seriesId, Integer seasonNumber, Integer year, String title);
+
+    SeasonResponse getById(Long id);
 }

@@ -1,23 +1,27 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.NotFoundException;
-import ar.com.mediaranking.models.entity.EpisodeEntity;
-import ar.com.mediaranking.models.entity.SeasonEntity;
-import ar.com.mediaranking.models.entity.SeriesEntity;
+import ar.com.mediaranking.models.entity.*;
 import ar.com.mediaranking.models.repository.EpisodeRepository;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.SeasonRepository;
 import ar.com.mediaranking.models.request.EpisodeSeasonRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
+import ar.com.mediaranking.models.request.SeasonUpdateRequest;
 import ar.com.mediaranking.models.response.SeasonResponse;
 import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class SeasonServiceImpl implements SeasonService {
@@ -38,12 +42,13 @@ public class SeasonServiceImpl implements SeasonService {
         season.setSeries(entity);
 
        SeasonEntity savedSeason = repository.save(season);
-       for(EpisodeEntity episode : savedSeason.getEpisodes()) {
-           episode.setSeason(savedSeason);
-           episodeRepository.save(episode);
+       if(season.getEpisodes() != null) {
+           for (EpisodeEntity episode : season.getEpisodes()) {
+               episode.setSeason(savedSeason);
+               episodeRepository.save(episode);
+           }
        }
-
-        return  savedSeason;
+       return savedSeason;
     }
 
     @Override
@@ -76,8 +81,7 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     @Override
-    @Transactional
-    public SeasonResponse update(Long id, SeasonRequest request) {
+    public SeasonResponse update(Long id, SeasonUpdateRequest request) {
         SeasonEntity season = repository.findById(id).orElseThrow(() -> new NotFoundException("Season with ID: " + id +" not found"));
 
         if(request.getSeriesId() != null) {
@@ -87,16 +91,6 @@ public class SeasonServiceImpl implements SeasonService {
         }
         if(request.getTitle() != null) season.setTitle(request.getTitle());
         if(request.getSeasonNumber() != null) season.setSeasonNumber(request.getSeasonNumber());
-        if(request.getEpisodes() != null && !request.getEpisodes().isEmpty()) {
-            episodeRepository.deleteAll(season.getEpisodes());
-
-            season.setEpisodes(new ArrayList<>());
-            for(EpisodeSeasonRequest episodeRequest : request.getEpisodes()) {
-                EpisodeEntity episode = mapper.convertDtoToEntity(episodeRequest);
-                episode.setSeason(season);
-                season.getEpisodes().add(episodeRepository.save(episode));
-            }
-        }
         if(request.getDescription() != null) season.setDescription(request.getDescription());
 
         SeasonEntity savedSeason = repository.save(season);
@@ -114,5 +108,29 @@ public class SeasonServiceImpl implements SeasonService {
         repository.deleteAll(seasons);
     }
 
+    @Override
+    public List<SeasonResponse> getAll(Long seriesId, Integer seasonNumber, Integer year, String title) {
+        Specification<SeasonEntity> spec = where(null);
+
+        if(title != null){
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
+        }
+        if(seasonNumber != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("seasonNumber"), seasonNumber));
+        }
+        if(year != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("year"), year));
+        }
+        if(seriesId != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("series").get("id"), seriesId));
+        }
+
+        return mapper.convertEntityToDto(repository.findAll(spec));
+    }
+
+    @Override
+    public SeasonResponse getById(Long id) {
+        return mapper.convertEntityToDto(repository.findById(id).orElseThrow(() -> new NotFoundException("Season with ID: " + id +" not found")));
+    }
 
 }
