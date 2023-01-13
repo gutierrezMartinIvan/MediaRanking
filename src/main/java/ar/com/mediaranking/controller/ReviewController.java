@@ -34,6 +34,7 @@ public class ReviewController {
 
     @PutMapping("{id}")
     public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long id, @RequestBody ReviewRequest reviewRequest) {
+        // TODO: reviewUpdate body?
         return ResponseEntity.ok(reviewService.update(id, reviewRequest));
     }
 }

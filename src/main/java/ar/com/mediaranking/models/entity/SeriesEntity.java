@@ -3,6 +3,8 @@ package ar.com.mediaranking.models.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +50,6 @@ public class SeriesEntity {
     List<SeasonEntity> seasons;
 
     @OneToMany(mappedBy = "series")
-    private List<ReviewEntity> reviews;
+    private List<ReviewEntity> reviews = new ArrayList<>();
 }
 

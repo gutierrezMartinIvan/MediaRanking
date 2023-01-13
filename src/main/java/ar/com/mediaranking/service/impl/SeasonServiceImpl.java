@@ -38,12 +38,13 @@ public class SeasonServiceImpl implements SeasonService {
         season.setSeries(entity);
 
        SeasonEntity savedSeason = repository.save(season);
-       for(EpisodeEntity episode : savedSeason.getEpisodes()) {
-           episode.setSeason(savedSeason);
-           episodeRepository.save(episode);
+       if(season.getEpisodes() != null) {
+           for (EpisodeEntity episode : season.getEpisodes()) {
+               episode.setSeason(savedSeason);
+               episodeRepository.save(episode);
+           }
        }
-
-        return  savedSeason;
+       return savedSeason;
     }
 
     @Override

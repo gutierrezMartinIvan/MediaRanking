@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 
+import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Table(name = "seasons")
@@ -34,7 +35,7 @@ public class SeasonEntity {
     @Column(nullable = false)
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @OrderBy("episodeNumber ASC")
-    List<EpisodeEntity> episodes;
+    List<EpisodeEntity> episodes = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "series_id")
