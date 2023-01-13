@@ -108,7 +108,7 @@ public class MovieServiceImpl implements MovieService {
 
 
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
-        Specification<List<MovieEntity>> spec = where(null);
+        Specification<MovieEntity> spec = where(null);
 
 
         if(title != null){

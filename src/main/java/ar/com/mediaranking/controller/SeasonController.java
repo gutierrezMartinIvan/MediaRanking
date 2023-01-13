@@ -19,8 +19,17 @@ public class SeasonController {
     private SeasonService seasonService;
 
     @GetMapping
-    public ResponseEntity<List<SeasonResponse>> getAllSeasons() {
-        return ResponseEntity.ok(seasonService.getAll());
+    public ResponseEntity<List<SeasonResponse>> getAllSeasons(@RequestParam(required = false) Long seriesId,
+                                                              @RequestParam(required = false) Integer seasonNumber,
+                                                              @RequestParam(required = false) Integer year,
+                                                              @RequestParam(required = false) String title
+                                                              ) {
+        return ResponseEntity.ok(seasonService.getAll(seriesId, seasonNumber, year, title));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SeasonResponse> getSeasonById(@PathVariable Long id) {
+        return ResponseEntity.ok(seasonService.getById(id));
     }
 
 
