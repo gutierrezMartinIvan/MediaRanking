@@ -22,7 +22,5 @@ public interface MovieService {
 
     List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres);
 
-    MovieResponse insertReview2Movie(Long id, ReviewRequest review);
-
     List<MovieResponse> saveList(List<MovieRequest> movieList);
 }

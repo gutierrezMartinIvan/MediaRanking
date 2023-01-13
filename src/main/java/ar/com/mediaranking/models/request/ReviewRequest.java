@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewRequest {
 
+    private Long entityId;
+
     @NotNull(message = "User ID can not be null")
     @NotBlank(message = "User ID can not be blank")
     @NotEmpty(message = "User ID can not be empty")

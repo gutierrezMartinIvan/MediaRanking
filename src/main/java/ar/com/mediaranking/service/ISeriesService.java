@@ -21,7 +21,5 @@ public interface ISeriesService {
 
     void deleteSerieById(Long id);
 
-    SeriesResponse insertReview2Series(Long id, ReviewRequest review);
-
     SeriesResponse update(Long id, SeriesRequest request);
 }

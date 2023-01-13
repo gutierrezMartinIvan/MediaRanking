@@ -88,23 +88,6 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
-    public SeriesResponse insertReview2Series(Long id, ReviewRequest review) {
-        SeriesEntity entityUpdated = null;
-        Optional<SeriesEntity> seriesOptional = repository.findById(id);
-
-
-        if (seriesOptional.isPresent())
-            entityUpdated = seriesOptional.get();
-        else
-            throw new NotFoundException("There is not a series with the id: " + id);
-
-        ReviewEntity reviewSaved = reviewService.saveSeries(review, seriesOptional.get());
-        entityUpdated.getReviews().add(reviewSaved);
-        repository.save(entityUpdated);
-        return mapper.convertEntityToDto(entityUpdated);
-    }
-
-    @Override
     @Transactional
     public SeriesResponse update(Long id, SeriesRequest request) {
         SeriesEntity entity = repository.findById(id).orElseThrow(

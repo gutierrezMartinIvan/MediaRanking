@@ -31,28 +31,6 @@ public class ReviewServiceImpl implements IReviewService {
     @Autowired
     private ISeriesRepository seriesRepository;
 
-    @Override
-    public ReviewEntity save(ReviewRequest reviewRequest) {
-        ReviewEntity entity = mapper.convertDtoToEntity(reviewRequest);
-        return repository.save(entity);
-    }
-
-    @Override
-    public ReviewEntity saveSeries(ReviewRequest reviewRequest, SeriesEntity series) {
-        ReviewEntity entitySaved = mapper.convertDtoToEntity(reviewRequest);
-        entitySaved.setSeries(series);
-        repository.save(entitySaved);
-        return entitySaved;
-    }
-
-    @Override
-    public ReviewEntity saveMovie(ReviewRequest reviewRequest, MovieEntity movie) {
-        ReviewEntity entitySaved = mapper.convertDtoToEntity(reviewRequest);
-        entitySaved.setMovies(movie);
-        repository.save(entitySaved);
-        return entitySaved;
-    }
-
     private Sort getSort(String order, String field) {
         if(order == null || order.isEmpty()) {
             return null;
@@ -97,6 +75,30 @@ public class ReviewServiceImpl implements IReviewService {
         }
 
         return mapper.convertEntityToDto(repository.save(review));
+    }
+
+    @Override
+    public ReviewResponse createReviewForMovie(ReviewRequest review) {
+        MovieEntity movie = movieRepository.findById(review.getEntityId()).orElseThrow(() -> new NotFoundException("Movie with id: " + review.getEntityId() + " not found"));
+        ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
+
+        reviewEntity.setMovies(movie);
+        movie.getReviews().add(reviewEntity);
+
+        movieRepository.save(movie);
+        return mapper.convertEntityToDto(repository.save(reviewEntity));
+    }
+
+    @Override
+    public ReviewResponse createReviewForSeries(ReviewRequest review) {
+        SeriesEntity series = seriesRepository.findById(review.getEntityId()).orElseThrow(() -> new NotFoundException("Series with id: " + review.getEntityId() + " not found"));
+        ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
+
+        reviewEntity.setSeries(series);
+        series.getReviews().add(reviewEntity);
+
+        seriesRepository.save(series);
+        return mapper.convertEntityToDto(repository.save(reviewEntity));
     }
 
 }
