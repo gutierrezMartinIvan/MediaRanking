@@ -105,5 +105,10 @@ public class SeasonServiceImpl implements SeasonService {
         repository.deleteAll(seasons);
     }
 
+    @Override
+    public List<SeasonResponse> getAll() {
+        return mapper.convertEntityToDto(repository.findAll());
+    }
+
 
 }

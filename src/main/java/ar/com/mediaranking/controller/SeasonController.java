@@ -18,6 +18,11 @@ public class SeasonController {
     @Autowired
     private SeasonService seasonService;
 
+    @GetMapping
+    public ResponseEntity<List<SeasonResponse>> getAllSeasons() {
+        return ResponseEntity.ok(seasonService.getAll());
+    }
+
 
     @PostMapping
     public ResponseEntity<SeasonResponse> createSeason(@RequestBody SeasonRequest request) {

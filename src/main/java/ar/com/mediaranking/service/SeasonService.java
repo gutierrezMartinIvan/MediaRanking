@@ -22,4 +22,6 @@ public interface SeasonService {
     void delete(Long id);
 
     void deleteAll(List<SeasonEntity> seasons);
+
+    List<SeasonResponse> getAll();
 }
