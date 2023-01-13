@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class SeasonResponse {
-
+    @Schema(example = "1")
     Long id;
 
     @Schema(description = "Season number", example = "1")

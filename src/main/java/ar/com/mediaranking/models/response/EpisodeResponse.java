@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class EpisodeResponse {
+    @Schema(example = "1")
     Long id;
     @Schema(description = "Episode number", example = "1")
     Integer episodeNumber;
