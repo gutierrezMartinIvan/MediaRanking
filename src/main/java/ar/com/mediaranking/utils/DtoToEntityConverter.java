@@ -123,4 +123,10 @@ public class DtoToEntityConverter {
                 .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
+
+    public List<EpisodeResponse> convertEpisodesToDto(List<EpisodeEntity> all) {
+        return all.stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
 }
