@@ -1,7 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.NotFoundException;
-import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
@@ -17,7 +16,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -89,7 +87,7 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     @Transactional
-    public SeriesResponse update(Long id, SeriesUpdateRequest request) {
+    public SeriesResponse update(Long id, SeriesUpdate request) {
         SeriesEntity entity = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("There is not a series with the id: " + id));
 

@@ -4,10 +4,9 @@ import ar.com.mediaranking.exception.MovieAlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
-import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
-import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.MovieUpdate;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
@@ -82,7 +81,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse update(long id, MovieRequest movie){
+    public MovieResponse update(long id, MovieUpdate movie){
         MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
 
         if(movie.getTitle() != null && !movie.getTitle().isBlank()){

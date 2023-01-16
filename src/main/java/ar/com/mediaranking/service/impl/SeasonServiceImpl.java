@@ -5,15 +5,11 @@ import ar.com.mediaranking.models.entity.*;
 import ar.com.mediaranking.models.repository.EpisodeRepository;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.SeasonRepository;
-import ar.com.mediaranking.models.request.EpisodeSeasonRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
-import ar.com.mediaranking.models.request.SeasonUpdateRequest;
+import ar.com.mediaranking.models.request.SeasonUpdate;
 import ar.com.mediaranking.models.response.SeasonResponse;
 import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Join;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -81,7 +77,7 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     @Override
-    public SeasonResponse update(Long id, SeasonUpdateRequest request) {
+    public SeasonResponse update(Long id, SeasonUpdate request) {
         SeasonEntity season = repository.findById(id).orElseThrow(() -> new NotFoundException("Season with ID: " + id +" not found"));
 
         if(request.getSeriesId() != null) {

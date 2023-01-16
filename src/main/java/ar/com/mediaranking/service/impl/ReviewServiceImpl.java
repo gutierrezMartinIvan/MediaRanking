@@ -8,6 +8,7 @@ import ar.com.mediaranking.models.repository.IReviewRepository;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.ReviewUpdate;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
@@ -64,7 +65,7 @@ public class ReviewServiceImpl implements IReviewService {
     }
 
     @Override
-    public ReviewResponse update(Long id, ReviewRequest reviewRequest){
+    public ReviewResponse update(Long id,ReviewUpdate reviewRequest){
         ReviewEntity review = repository.findById(id).orElseThrow(() -> new NotFoundException("Review with id: " + id + " not found"));
 
         if(reviewRequest.getReview() != null) {

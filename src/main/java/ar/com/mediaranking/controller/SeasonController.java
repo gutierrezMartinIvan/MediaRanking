@@ -2,7 +2,7 @@ package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.response.SeasonResponse;
-import ar.com.mediaranking.models.request.SeasonUpdateRequest;
+import ar.com.mediaranking.models.request.SeasonUpdate;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.service.SeasonService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -110,7 +110,7 @@ public class SeasonController {
     )
     @Transactional
     @PatchMapping("{id}")
-    public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonUpdateRequest request) {
+    public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonUpdate request) {
         return ResponseEntity.ok(seasonService.update(id, request));
     }
 

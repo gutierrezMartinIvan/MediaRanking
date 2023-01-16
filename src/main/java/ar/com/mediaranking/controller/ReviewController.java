@@ -1,6 +1,7 @@
 package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.ReviewUpdate;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.service.IReviewService;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class ReviewController {
             }
     )
     @PostMapping("/movie")
-    public ResponseEntity<ReviewResponse> createReviewForMovie(@RequestBody ReviewRequest review) {
+    public ResponseEntity<ReviewResponse> createReviewForMovie(@Valid @RequestBody ReviewRequest review) {
         return new ResponseEntity<>(reviewService.createReviewForMovie(review), HttpStatus.CREATED);
     }
 
@@ -67,7 +69,7 @@ public class ReviewController {
             }
     )
     @PostMapping("/series")
-    public ResponseEntity<ReviewResponse> createReviewForSeries(@RequestBody ReviewRequest review) {
+    public ResponseEntity<ReviewResponse> createReviewForSeries(@Valid @RequestBody ReviewRequest review) {
         return new ResponseEntity<>(reviewService.createReviewForSeries(review), HttpStatus.CREATED);
     }
 
@@ -116,8 +118,7 @@ public class ReviewController {
     )
     @Transactional
     @PatchMapping("{id}")
-    public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long id, @RequestBody ReviewRequest reviewRequest) {
-        // TODO: reviewUpdate body?
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long id,@Valid @RequestBody ReviewUpdate reviewRequest) {
         return ResponseEntity.ok(reviewService.update(id, reviewRequest));
     }
 }

@@ -2,7 +2,7 @@ package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
-import ar.com.mediaranking.models.request.SeriesUpdateRequest;
+import ar.com.mediaranking.models.request.SeriesUpdate;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.service.ISeriesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -120,7 +120,7 @@ public class SeriesController {
     )
     @Transactional
     @PatchMapping("{id}")
-    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesUpdateRequest request) {
+    public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id,@Valid @RequestBody SeriesUpdate request) {
         SeriesResponse response = seriesService.update(id, request);
         return ResponseEntity.ok(response);
     }

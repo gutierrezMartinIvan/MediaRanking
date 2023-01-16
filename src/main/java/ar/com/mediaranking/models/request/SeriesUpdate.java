@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-public class SeriesUpdateRequest {
+public class SeriesUpdate {
 
     @Schema(description = "Series title, this field is optional and if it is blank it will be ignore", example = "Dragon Ball Super")
     String title;
