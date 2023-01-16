@@ -1,7 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.AlreadyExistsException;
-import ar.com.mediaranking.exception.MovieAlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
