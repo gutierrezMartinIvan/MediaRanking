@@ -13,15 +13,11 @@ public class SeasonSeriesRequest {
     @NotNull(message = "Season number can not be null")
     Integer seasonNumber;
 
-    @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")
-    @NotEmpty(message = "Tittle can not be empty")
     @Schema(description = "Season title", example = "Season 1")
     String title;
 
-    @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
     @Schema(description = "Season description", example = "Season 1 description")
     String description;
 
