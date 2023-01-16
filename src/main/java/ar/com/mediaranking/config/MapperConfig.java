@@ -1,5 +1,6 @@
 package ar.com.mediaranking.config;
 
+import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.EpisodeEntity;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.SeasonEntity;
@@ -35,8 +36,7 @@ public class MapperConfig {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
             {
                 String s = context.getSource();
-                // TODO: Falta agregar excepcion si no existe el genero
-                return genreRepository.findByName(s.toUpperCase());
+                return genreRepository.findByName(s.toUpperCase()).orElseThrow(() -> new NotFoundException("Genre Not Found"));
             }
         });
 
