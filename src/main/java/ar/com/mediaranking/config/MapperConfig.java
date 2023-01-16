@@ -7,6 +7,7 @@ import ar.com.mediaranking.models.repository.IGenreRepository;
 import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.request.SeasonRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -23,10 +24,8 @@ public class MapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mm = new ModelMapper();
-        //mm.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        /*mm.getConfiguration().setPropertyCondition(Conditions.isNotNull())
-        mm.typeMap(SeriesRequest.class, SeriesEntity.class)
-                .addMappings(mapper -> mapper.skip(SeriesEntity::setSeasons));*/
+
+        mm.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         mm.typeMap(SeasonRequest.class, SeasonEntity.class)
                 .addMappings(mapper -> mapper.skip(SeasonEntity::setId));
         mm.typeMap(EpisodeRequest.class, EpisodeEntity.class)
