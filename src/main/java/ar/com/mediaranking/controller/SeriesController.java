@@ -75,8 +75,8 @@ public class SeriesController {
     }
 
     @Operation(
-            summary = "Save series by its ID",
-            description = "In this feature you can save for a series by its ID"
+            summary = "Create a new series",
+            description = "In this feature you can save for a series, the season and the episodes list are optional"
     )
     @ApiResponses(
             value = {

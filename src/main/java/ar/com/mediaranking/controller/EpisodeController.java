@@ -118,7 +118,7 @@ public class EpisodeController {
 
     @Operation(
             summary = "delete an episode",
-            description = "This feature lets delete an episode in the system"
+            description = "This feature lets delete an episode in the system partially"
     )
     @ApiResponses(
             value = {

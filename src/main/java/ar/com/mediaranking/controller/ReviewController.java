@@ -43,11 +43,29 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.findAllByMovieId(id, order));
     }
 
+    @Operation(
+            summary = "Post a review for a movie",
+            description = "In this feature you can save a review for a movie"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Review created successfully!"),
+            }
+    )
     @PostMapping("/movie")
     public ResponseEntity<ReviewResponse> createReviewForMovie(@RequestBody ReviewRequest review) {
         return new ResponseEntity<>(reviewService.createReviewForMovie(review), HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Post a review for a series",
+            description = "In this feature you can save a review for a series"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Review created successfully!"),
+            }
+    )
     @PostMapping("/series")
     public ResponseEntity<ReviewResponse> createReviewForSeries(@RequestBody ReviewRequest review) {
         return new ResponseEntity<>(reviewService.createReviewForSeries(review), HttpStatus.CREATED);

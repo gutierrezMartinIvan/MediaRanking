@@ -82,8 +82,8 @@ public class MovieController {
     }
 
     @Operation(
-            summary = "Save movie by its ID",
-            description = "In this feature you can save for a movie by its ID"
+            summary = "Save movie",
+            description = "In this feature you can save a movie"
     )
     @ApiResponses(
             value = {
@@ -98,8 +98,8 @@ public class MovieController {
         return new ResponseEntity<>(service.save(movie), HttpStatus.CREATED);
     }
     @Operation(
-            summary = "Save movie by its ID",
-            description = "In this feature you can save for a movie by its ID"
+            summary = "Save a list of movies",
+            description = "In this feature you can save a list of movies"
     )
     @ApiResponses(
             value = {
@@ -132,7 +132,7 @@ public class MovieController {
 
     @Operation(
             summary = "Update movie by its ID",
-            description = "In this feature you can update for a movie by its ID"
+            description = "In this feature you can update for a movie by its ID, you can do a partial update"
     )
     @ApiResponses(
             value = {
@@ -144,6 +144,7 @@ public class MovieController {
     @Transactional
     @PutMapping("/{id}")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id, @RequestBody MovieRequest movie) {
+        // TODO: MovieUpdateRequest ?
         return ResponseEntity.ok(service.update(id, movie));
     }
 }

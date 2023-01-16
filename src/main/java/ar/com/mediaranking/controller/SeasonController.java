@@ -82,7 +82,7 @@ public class SeasonController {
 
     @Operation(
             summary = "Save a list of new seasons",
-            description = "This feature lets register a list of seasons to the system"
+            description = "This feature lets register a list of seasons to the system, episodes list is optional"
     )
     @ApiResponses(
             value = {
