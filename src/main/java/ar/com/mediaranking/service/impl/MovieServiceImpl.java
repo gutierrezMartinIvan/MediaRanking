@@ -71,7 +71,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteById(long id){
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("There is no movie with id: " + id);
+        }
     }
 
     @Override

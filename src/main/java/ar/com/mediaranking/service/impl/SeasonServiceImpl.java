@@ -96,7 +96,11 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("Season with ID: " + id +" not found");
+        }
     }
 
     @Override

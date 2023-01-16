@@ -83,7 +83,11 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("Episode with id " + id + " not found");
+        }
     }
 
     @Override
