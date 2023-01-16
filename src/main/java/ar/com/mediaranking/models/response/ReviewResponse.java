@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewResponse {
+    @Schema(example = "1")
     private Long id;
 
     @NotNull(message = "User ID can not be null")

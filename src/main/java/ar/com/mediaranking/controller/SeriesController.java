@@ -1,15 +1,18 @@
 package ar.com.mediaranking.controller;
 
-
-import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
-import ar.com.mediaranking.models.request.SeriesUpdateRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
-import ar.com.mediaranking.service.IReviewService;
+import ar.com.mediaranking.models.request.SeriesUpdateRequest;
+import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.service.ISeriesService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,52 +23,102 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/series")
-@Schema(name = "Series Controller", description = "Controller for series endpoints")
+@Tag(
+        name = "Series Controller",
+        description = "Controller for series endpoints"
+)
 public class SeriesController {
-
     @Autowired
     private ISeriesService seriesService;
 
-    @Autowired
-    private IReviewService reviewService;
-
-    @Operation(summary = "Get all series")
+    @Operation(
+            summary = "Get all series",
+            description = "This feature lets all get all series.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Series found successfully!")
+            })
     @GetMapping()
     public ResponseEntity<List<SeriesResponse>> getAllSeries() {
         return ResponseEntity.ok(seriesService.getAll());
     }
 
-    @Operation(summary = "Get series by filters")
+    @Operation(
+            summary = "Get series by filters",
+            description = "In this feature you can look up for a series by its tittle, author, genres or year")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Series found successfully!")
+            })
     @GetMapping("/filter")
     public ResponseEntity<List<SeriesResponse>> getSeriesByFilters(@RequestParam(required = false) String title,
                                                                    @RequestParam(required = false) String author,
                                                                    @RequestParam(required = false) Set<String> genres,
                                                                    @RequestParam(required = false) Integer year
     ) {
-        List<SeriesResponse> responses = seriesService.getByFilters(title, author, genres, year);
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(seriesService.getByFilters(title, author, genres, year));
     }
 
-    @Operation(summary = "Get a series by its ID")
+    @Operation(
+            summary = "Get a series by its ID",
+            description = "In this feature you can look up for a series by its ID")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Series found successfully!"),
+                    @ApiResponse(responseCode = "404", description = "Series not found!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<SeriesResponse> getSeriesById(@PathVariable Long id) {
         return ResponseEntity.ok(seriesService.getSerieById(id));
     }
 
+    @Operation(
+            summary = "Create a new series",
+            description = "In this feature you can save for a series, the season and the episodes list are optional"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Series save successfully!"),
+                    @ApiResponse(responseCode = "409", description = "Series is already registered!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
     @Transactional
     @PostMapping()
-    //TODO: Add validation
-    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
+    public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
         return new ResponseEntity<>(seriesService.save(request), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Delete a series by its ID")
+    @Operation(
+            summary = "Delete series by its ID",
+            description = "In this feature you can delete for a series by its ID"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Series deleted successfully!"),
+                    @ApiResponse(responseCode = "404", description = "Series not found!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
     @DeleteMapping("{id}")
-    public void deleteSerieById(@PathVariable Long id) {
+    public void deleteSeriesById(@PathVariable Long id) {
         seriesService.deleteSerieById(id);
     }
 
-    @Operation(summary = "Update a series by its ID")
+    @Operation(
+            summary = "Update series by its ID",
+            description = "In this feature you can update for a series by its ID"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Series updated successfully!"),
+                    @ApiResponse(responseCode = "404", description = "Series not found!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
+    @Transactional
     @PutMapping("{id}")
     public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesUpdateRequest request) {
         SeriesResponse response = seriesService.update(id, request);

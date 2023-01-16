@@ -5,11 +5,13 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class SeriesResponse {
 
+    @Schema(example = "1")
     Long id;
     @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")
@@ -40,5 +42,5 @@ public class SeriesResponse {
     @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
     List<String> genres;
 
-    List<SeasonResponse> seasons;
+    List<SeasonResponse> seasons = new ArrayList<>();
 }

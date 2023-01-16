@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieResponse {
+    @Schema(example = "1")
     Long id;
     @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
