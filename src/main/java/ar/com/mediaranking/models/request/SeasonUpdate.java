@@ -1,11 +1,10 @@
 package ar.com.mediaranking.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class SeasonUpdateRequest {
+public class SeasonUpdate {
     @Schema(description = "Series id, this field is optional", example = "1")
     Long seriesId;
 

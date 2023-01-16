@@ -1,6 +1,7 @@
 package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.MovieRequest;
+import ar.com.mediaranking.models.request.MovieUpdate;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.service.MovieService;
@@ -142,8 +143,8 @@ public class MovieController {
             }
     )
     @Transactional
-    @PutMapping("/{id}")
-    public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id, @RequestBody MovieRequest movie) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id,@Valid @RequestBody MovieUpdate movie) {
         // TODO: MovieUpdateRequest ?
         return ResponseEntity.ok(service.update(id, movie));
     }
