@@ -23,6 +23,12 @@ public class SeriesUpdate {
     @Max(value = 2023)
     Integer year;
 
-    @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
+    @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]",
+            allowableValues = {
+                    "ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY", "CRIME",
+                    "DOCUMENTARY", "DRAMA", "FAMILY", "FANTASY", "FILM_NOIR", "HISTORY",
+                    "HORROR", "MUSIC", "MUSICAL", "MYSTERY", "ROMANCE", "SCI_FI", "SPORT",
+                    "THRILLER", "WAR", "WESTERN"}
+    )
     Set<String> genres = new HashSet<>();
 }

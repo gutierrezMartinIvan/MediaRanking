@@ -19,7 +19,13 @@ public class MovieUpdate {
     @Schema(description = "Movie director",example = "Bob Persichetti")
     String director;
 
-    @Schema(description = "Movie genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
+    @Schema(description = "Movie genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]",
+            allowableValues = {
+                    "ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY", "CRIME",
+                    "DOCUMENTARY", "DRAMA", "FAMILY", "FANTASY", "FILM_NOIR", "HISTORY",
+                    "HORROR", "MUSIC", "MUSICAL", "MYSTERY", "ROMANCE", "SCI_FI", "SPORT",
+                    "THRILLER", "WAR", "WESTERN"}
+    )
     private Set<String> genres = new HashSet<>();
 
     @Min(value=1)
