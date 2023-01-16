@@ -16,21 +16,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieRequest {
-    @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
     @Schema(description = "Movie title", example = "Spider-Man: Into the Spider-Verse")
     String title;
 
-    @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
     @Schema(description = "Movie description",example = "Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered individuals from other dimensions to stop a threat for all realities.")
     String description;
 
-    @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
     @Schema(description = "Movie director",example = "Bob Persichetti")
     String director;
 

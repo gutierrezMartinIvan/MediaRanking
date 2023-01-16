@@ -15,21 +15,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeriesRequest {
-    @NotNull(message = "Tittle can not be null")
     @NotBlank(message = "Tittle can not be blank")
-    @NotEmpty(message = "Tittle can not be empty")
     @Schema(description = "Series title", example = "Dragon Ball Super")
     String title;
 
-    @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
     @Schema(description = "Series description", example = "In the year 1992, the two sides of....")
     String description;
 
-    @NotNull(message = "Author can not be null")
     @NotBlank(message = "Author can not be blank")
-    @NotEmpty(message = "Author can not be empty")
     @Schema(description = "Series author", example = "Akira Toriyama")
     String author;
 

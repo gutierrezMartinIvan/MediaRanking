@@ -12,8 +12,6 @@ public class EpisodeSeasonRequest {
     @Schema(description = "Episode number", example = "1")
     Integer episodeNumber;
     @Schema(description = "Episode title", example = "Episode 1")
-    @NotNull(message = "The name can't be null")
-    @NotEmpty(message = "the name can't be empty")
     @NotBlank(message = "the name can't be blank")
     String title;
     @Schema(description = "Episode description", example = "Episode 1 description")
