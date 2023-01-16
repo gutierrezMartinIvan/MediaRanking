@@ -36,7 +36,7 @@ public class MapperConfig {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
             {
                 String s = context.getSource();
-                return genreRepository.findByName(s.toUpperCase()).orElseThrow(() -> new NotFoundException("Genre Not Found"));
+                return genreRepository.findByName(s.toUpperCase()).orElseThrow(() -> new NotFoundException("Genre with name: " + s + " not found"));
             }
         });
 
