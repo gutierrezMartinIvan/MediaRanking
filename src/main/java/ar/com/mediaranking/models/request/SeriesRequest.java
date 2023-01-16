@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,15 +27,15 @@ public class SeriesRequest {
     @Schema(description = "Series description", example = "In the year 1992, the two sides of....")
     String description;
 
-    @NotNull(message = "Description can not be null")
-    @NotBlank(message = "Description can not be blank")
-    @NotEmpty(message = "Description can not be empty")
+    @NotNull(message = "Author can not be null")
+    @NotBlank(message = "Author can not be blank")
+    @NotEmpty(message = "Author can not be empty")
     @Schema(description = "Series author", example = "Akira Toriyama")
     String author;
 
     @Min(value=1800)
     @Max(value=2023)
-    @NotNull(message = "Description can not be null")
+    @NotNull(message = "Year can not be null")
     Integer year;
 
     @NotNull(message = "Genres can not be null")

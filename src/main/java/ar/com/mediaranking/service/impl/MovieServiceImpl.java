@@ -83,7 +83,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse update(long id, MovieRequest movie){
-        // TODO: change exception name
         MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
 
         if(movie.getTitle() != null && !movie.getTitle().isBlank()){

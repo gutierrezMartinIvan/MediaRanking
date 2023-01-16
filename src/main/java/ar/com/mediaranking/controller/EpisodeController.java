@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/episode")
-@Schema(
+@Tag(
         name = "Episode management",
         description = "Here you can use all the provides features for episodes"
 )
@@ -28,6 +29,15 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
+    @Operation(
+            summary = "Get episodes by filters",
+            description = "In this feature you can look up for an episode by its series ID, season ID, title, year, season number or episode number"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Episodes found successfully!")
+            }
+    )
     @GetMapping
     public ResponseEntity<List<EpisodeResponse>> getAllEpisodes(@RequestParam(required = false) Long seriesId,
                                                                @RequestParam(required = false) Long seasonId,
@@ -39,6 +49,17 @@ public class EpisodeController {
         return ResponseEntity.ok(episodeService.getAll(seriesId, seasonId, seasonNumber, episodeNumber, year, title));
     }
 
+    @Operation(
+            summary = "Get episode by its ID",
+            description = "In this feature you can look up for an episode by its ID"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Episode found successfully!"),
+                    @ApiResponse(responseCode = "404", description = "Episode not found!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<EpisodeResponse> getEpisodeById(@PathVariable Long id) {
         return ResponseEntity.ok(episodeService.getById(id));

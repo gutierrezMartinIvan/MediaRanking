@@ -1,16 +1,15 @@
 package ar.com.mediaranking.controller;
 
 import ar.com.mediaranking.models.request.MovieRequest;
-import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.models.response.MovieResponse;
-import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,10 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/movies")
+@Tag(
+        name = "Movie management",
+        description = "Here you can use all the provides features for movies"
+)
 public class MovieController {
 
     @Autowired
@@ -35,7 +38,6 @@ public class MovieController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Movies found successfully!")
-                    //TODO another response if there is
             })
     @GetMapping
     public ResponseEntity<List<MovieResponse>> getMovies() {

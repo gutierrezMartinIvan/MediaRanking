@@ -10,7 +10,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/season")
-@Schema(
+@Tag(
         name = "Season management",
         description = "Here you can use all the provides features for seasons"
 )
@@ -27,6 +29,15 @@ public class SeasonController {
     @Autowired
     private SeasonService seasonService;
 
+    @Operation(
+            summary = "Get seasons by filters",
+            description = "In this feature you can look up for a season by its series ID, title, year and season number"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Seasons found successfully!")
+            }
+    )
     @GetMapping
     public ResponseEntity<List<SeasonResponse>> getAllSeasons(@RequestParam(required = false) Long seriesId,
                                                               @RequestParam(required = false) Integer seasonNumber,
@@ -36,6 +47,17 @@ public class SeasonController {
         return ResponseEntity.ok(seasonService.getAll(seriesId, seasonNumber, year, title));
     }
 
+    @Operation(
+            summary = "Get season by its ID",
+            description = "In this feature you can look up for a season by its ID"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Season found successfully!"),
+                    @ApiResponse(responseCode = "404", description = "Season not found!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<SeasonResponse> getSeasonById(@PathVariable Long id) {
         return ResponseEntity.ok(seasonService.getById(id));
@@ -54,7 +76,7 @@ public class SeasonController {
     )
     @Transactional
     @PostMapping
-    public ResponseEntity<SeasonResponse> createSeason(@RequestBody SeasonRequest request) {
+    public ResponseEntity<SeasonResponse> createSeason(@Valid @RequestBody SeasonRequest request) {
         return ResponseEntity.ok(seasonService.save(request));
     }
 
@@ -71,7 +93,7 @@ public class SeasonController {
     )
     @Transactional
     @PostMapping("/list")
-    public ResponseEntity<List<SeasonResponse>> createSeason(@RequestBody List<SeasonRequest> request) {
+    public ResponseEntity<List<SeasonResponse>> createSeason(@Valid @RequestBody List<SeasonRequest> request) {
         return ResponseEntity.ok(seasonService.save(request));
     }
 
@@ -88,7 +110,7 @@ public class SeasonController {
     )
     @Transactional
     @PutMapping("{id}")
-    public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @RequestBody SeasonUpdateRequest request) {
+    public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonUpdateRequest request) {
         return ResponseEntity.ok(seasonService.update(id, request));
     }
 

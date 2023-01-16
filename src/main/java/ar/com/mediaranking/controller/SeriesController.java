@@ -1,19 +1,18 @@
 package ar.com.mediaranking.controller;
 
-
-import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.models.request.SeriesUpdateRequest;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
-import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/series")
-@Schema(
+@Tag(
         name = "Series Controller",
         description = "Controller for series endpoints"
 )
@@ -38,7 +37,6 @@ public class SeriesController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Series found successfully!")
-                    //TODO another response if there is
             })
     @GetMapping()
     public ResponseEntity<List<SeriesResponse>> getAllSeries() {
@@ -89,8 +87,7 @@ public class SeriesController {
     )
     @Transactional
     @PostMapping()
-    //TODO: Add validation
-    public ResponseEntity<SeriesResponse> createSeries(@RequestBody SeriesRequest request) {
+    public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
         return new ResponseEntity<>(seriesService.save(request), HttpStatus.CREATED);
     }
 
