@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.MovieAlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
@@ -44,7 +45,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/ {
         repository.findByTitleAndYear(request.getTitle(), request.getYear()).ifPresent(movieEntity -> {
-            throw new MovieAlreadyExistsException(
+            throw new AlreadyExistsException(
                     "There is already a movie with the name: " + request.getTitle() +
                     " and year: " + request.getYear() +
                     " with id :" + movieEntity.getId()
