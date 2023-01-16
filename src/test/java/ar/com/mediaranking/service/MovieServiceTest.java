@@ -4,11 +4,15 @@ import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
+import ar.com.mediaranking.models.entity.filter.MovieFilter;
 import ar.com.mediaranking.models.repository.MovieRepository;
+import ar.com.mediaranking.models.repository.specification.MovieSpecification;
 import ar.com.mediaranking.models.request.MovieRequest;
+import ar.com.mediaranking.models.request.MovieUpdate;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.service.impl.MovieServiceImpl;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +32,11 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -41,8 +48,14 @@ public class MovieServiceTest {
     @Mock
     private DtoToEntityConverter mapper;
 
+    @Mock
+    private MovieSpecification movieSpecification;
+
     @InjectMocks
     private MovieServiceImpl service;
+
+    @InjectMocks
+    private MovieSpecification specification = new MovieSpecification();
 
     private List<MovieRequest> movieRequests;
     private List<MovieEntity> movieEntities;
@@ -149,5 +162,100 @@ public class MovieServiceTest {
         assertThrows(NotFoundException.class, () -> service.deleteById(1L));
         verify(repository, Mockito.times(1)).deleteById(1L);
     }
+
+    @Test
+    void updateMovieThatDoesntExistThrowsException() {
+        MovieUpdate update = MovieUpdate.builder().build();
+
+        given(repository.findById(1L)).willReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> service.update(1L, update));
+        verify(repository, Mockito.times(1)).findById(1L);
+    }
+
+    @Test
+    void updateMovieThatExistsUpdatesMovie() {
+        MovieUpdate update = MovieUpdate.builder().title("New Title").build();
+        MovieEntity movie = movieEntities.get(0);
+        movie.setTitle(update.getTitle());
+        MovieResponse response = movieResponses.get(0);
+        response.setTitle(update.getTitle());
+
+        given(mapper.convertEntityToDto(movie)).willReturn(response);
+
+        given(repository.findById(1L)).willReturn(Optional.of(movieEntities.get(0)));
+        given(repository.save(movie)).willReturn(movie);
+
+        MovieResponse updatedMovie = service.update(1L, update);
+        verify(repository, Mockito.times(1)).findById(1L);
+        verify(repository, Mockito.times(1)).save(movie);
+        assertEquals(updatedMovie.getTitle(), update.getTitle());
+    }
+
+    @Test
+    void updateMovieCanUpdateAllEntity(){
+        MovieUpdate update = MovieUpdate.builder().title("New Title").description("New Description").director("New Director").duration(100).year(2000).genres(Set.of("Fiction")).build();
+        MovieEntity movie = MovieEntity.builder().id(1L).title(update.getTitle()).description(update.getDescription()).director(update.getDirector()).duration(update.getDuration()).year(update.getYear()).genres(Set.of(GenreEntity.builder().name("Fiction").build())).build();
+        MovieResponse response = MovieResponse.builder().id(1L).title(update.getTitle()).description(update.getDescription()).director(update.getDirector()).duration(update.getDuration()).year(update.getYear()).genres(Set.of("Fiction")).build();
+
+        given(mapper.convertEntityToDto(movie)).willReturn(response);
+        given(mapper.convertSetStringToGenre(Set.of("Fiction"))).willReturn(Set.of(GenreEntity.builder().name("Fiction").build()));
+
+        given(repository.findById(1L)).willReturn(Optional.of(movieEntities.get(0)));
+        given(repository.save(movie)).willReturn(movie);
+
+        MovieResponse updatedMovie = service.update(1L, update);
+        verify(repository, Mockito.times(1)).findById(1L);
+        verify(repository, Mockito.times(1)).save(movie);
+        verify(mapper, Mockito.times(1)).convertSetStringToGenre(Set.of("Fiction"));
+        assertEquals(updatedMovie.getTitle(), update.getTitle());
+    }
+
+    @Test
+    void findByFilterWithNoFilterReturnsAllMovies() {
+        MovieFilter filter = MovieFilter.builder().build();
+
+        Specification<MovieEntity> spec = specification.getByFilters(filter);
+
+        given(repository.findAll(spec)).willReturn(movieEntities);
+        given(movieSpecification.getByFilters(filter)).willReturn(spec);
+
+        List<MovieResponse> movies = service.findByFilter(null, null, null, null, null, null);
+        verify(repository, Mockito.times(1)).findAll(spec);
+        assert !movies.isEmpty();
+        assertEquals(movies, movieResponses);
+    }
+
+    @Test
+    void findByFilterWithFilterReturnsFilteredMovies() {
+        MovieFilter filter = MovieFilter.builder().title("Title").director("Director").year(2000).genres(Set.of("Fiction")).maxDuration(100).minDuration(10).build();
+
+        Specification<MovieEntity> spec = specification.getByFilters(filter);
+
+        given(repository.findAll(spec)).willReturn(movieEntities);
+        given(movieSpecification.getByFilters(filter)).willReturn(spec);
+        given(mapper.convertSetStringToGenre(Set.of("Fiction"))).willReturn(Set.of(GenreEntity.builder().name("Fiction").build()));
+
+        List<MovieResponse> movies = service.findByFilter("Title", "Director", 2000, 10, 100, Set.of("Fiction"));
+
+        verify(movieSpecification, Mockito.times(1)).getByFilters(filter);
+        verify(repository, Mockito.times(1)).findAll(spec);
+        assert !movies.isEmpty();
+        assertEquals(movies, movieResponses);
+    }
+
+    @Test
+    void saveListSavesAllMovies() {
+        given(repository.findByTitleAndYear(any(String.class), any(Integer.class))).willReturn(Optional.empty());
+
+        given(repository.save(movieEntities.get(0))).willReturn(movieEntities.get(0));
+        given(repository.save(movieEntities.get(1))).willReturn(movieEntities.get(1));
+        given(repository.save(movieEntities.get(2))).willReturn(movieEntities.get(2));
+
+        List<MovieResponse> savedMovies = service.saveList(movieRequests);
+        verify(repository, Mockito.times(3)).save(any(MovieEntity.class));
+        assert !savedMovies.isEmpty();
+        assertEquals(savedMovies, movieResponses);
+    }
+
 
 }
