@@ -6,6 +6,7 @@ import ar.com.mediaranking.models.response.ApiErrorResponse;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.service.IReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +43,7 @@ public class ReviewController {
             }
     )
     @GetMapping("/movie")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByMovieId(@RequestParam Long id, @RequestParam(required = false) String order) {
+    public ResponseEntity<List<ReviewResponse>> getReviewsByMovieId(@RequestParam Long id, @RequestParam(required = false) @Parameter(schema=@Schema(description="order", type="string", allowableValues= {"asc", "des"})) String order) {
         return ResponseEntity.ok(reviewService.findAllByMovieId(id, order));
     }
 
@@ -85,7 +87,7 @@ public class ReviewController {
             }
     )
     @GetMapping("/series")
-    public ResponseEntity<List<ReviewResponse>> getReviewsBySeriesId(@RequestParam Long id, @RequestParam(required = false) String order) {
+    public ResponseEntity<List<ReviewResponse>> getReviewsBySeriesId(@RequestParam Long id, @RequestParam(required = false) @Parameter(schema=@Schema(description="order", type="string", allowableValues= {"asc", "des"})) String order) {
         return ResponseEntity.ok(reviewService.findAllBySeriesId(id, order));
     }
 
