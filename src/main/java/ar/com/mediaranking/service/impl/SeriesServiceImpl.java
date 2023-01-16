@@ -1,17 +1,19 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
-import ar.com.mediaranking.models.entity.ReviewEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.specification.SeriesSpecification;
-import ar.com.mediaranking.models.request.ReviewRequest;
-import ar.com.mediaranking.models.request.SeriesRequest;
+import ar.com.mediaranking.models.request.*;
 import ar.com.mediaranking.models.response.SeriesResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.ISeriesService;
+import ar.com.mediaranking.service.SeasonService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,17 +36,30 @@ public class SeriesServiceImpl implements ISeriesService {
     @Autowired
     private IReviewService reviewService;
 
+    @Autowired
+    private SeasonService seasonService;
+
     @Override
     public boolean isNull(SeriesRequest request) {
         return false;
     }
 
     @Override
-    public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
-        SeriesEntity entity = mapper.convertDtoToEntity(request);
-        SeriesEntity entitySave = repository.save(entity);
-        SeriesResponse response = mapper.convertEntityToDto(entitySave);
-        return response;
+    public SeriesResponse save(SeriesRequest request) {
+        repository.findByTitleAndYear(request.getTitle(), request.getYear()).ifPresent(seriesEntity -> {
+                    throw new AlreadyExistsException(
+                            "There is already a series with the name: " + request.getTitle() +
+                                    " and year: " + request.getYear() +
+                                    " with id: " + seriesEntity.getId()
+                    );
+                });
+
+        SeriesEntity entitySave = repository.save(mapper.convertDtoToEntity(request));
+        if(request.getSeasons() != null) {
+            for (SeasonEntity season : entitySave.getSeasons())
+                seasonService.save(season, entitySave);
+        }
+        return mapper.convertEntityToDto(repository.save(entitySave));
     }
 
     @Override
@@ -68,25 +83,15 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public void deleteSerieById(Long id) {
+        Optional<SeriesEntity> seriesOptional = repository.findById(id);
+        if (!seriesOptional.isPresent())
+            throw new NotFoundException("There is not a series with the id: " + id);
         repository.deleteById(id);
     }
 
     @Override
-    public SeriesResponse insertReview2Series(Long id, ReviewRequest review) {
-        SeriesEntity entityUpdated = null;
-        Optional<SeriesEntity> seriesOptional = repository.findById(id);
-
-        if (seriesOptional.isPresent())
-            entityUpdated = seriesOptional.get();
-
-        ReviewEntity reviewSaved = reviewService.saveSeries(review, seriesOptional.get());
-        entityUpdated.getReviews().add(reviewSaved);
-        repository.save(entityUpdated);
-        return mapper.convertEntityToDto(entityUpdated);
-    }
-
-    @Override
-    public SeriesResponse update(Long id, SeriesRequest request) {
+    @Transactional
+    public SeriesResponse update(Long id, SeriesUpdate request) {
         SeriesEntity entity = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("There is not a series with the id: " + id));
 
@@ -103,6 +108,7 @@ public class SeriesServiceImpl implements ISeriesService {
             entity.setYear(request.getYear());
 
         SeriesEntity updatedEntity = repository.save(entity);
+
         return mapper.convertEntityToDto(updatedEntity);
     }
 

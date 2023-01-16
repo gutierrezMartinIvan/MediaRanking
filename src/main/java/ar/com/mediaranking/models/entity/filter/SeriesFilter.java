@@ -3,7 +3,6 @@ package ar.com.mediaranking.models.entity.filter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

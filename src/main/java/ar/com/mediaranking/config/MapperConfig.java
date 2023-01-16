@@ -1,8 +1,14 @@
 package ar.com.mediaranking.config;
 
+import ar.com.mediaranking.exception.NotFoundException;
+import ar.com.mediaranking.models.entity.EpisodeEntity;
 import ar.com.mediaranking.models.entity.GenreEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.repository.IGenreRepository;
+import ar.com.mediaranking.models.request.EpisodeRequest;
+import ar.com.mediaranking.models.request.SeasonRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -19,14 +25,18 @@ public class MapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mm = new ModelMapper();
-        //mm.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+
+        mm.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        mm.typeMap(SeasonRequest.class, SeasonEntity.class)
+                .addMappings(mapper -> mapper.skip(SeasonEntity::setId));
+        mm.typeMap(EpisodeRequest.class, EpisodeEntity.class)
+                .addMappings(mapper -> mapper.skip(EpisodeEntity::setId));
 
         mm.addConverter(new Converter<String, GenreEntity>() {
             public GenreEntity convert(MappingContext<String, GenreEntity> context)
             {
                 String s = context.getSource();
-                // TODO: Falta agregar excepcion si no existe el genero
-                return genreRepository.findByName(s.toUpperCase());
+                return genreRepository.findByName(s.toUpperCase()).orElseThrow(() -> new NotFoundException("Genre Not Found"));
             }
         });
 
@@ -36,6 +46,7 @@ public class MapperConfig {
                 return StringUtils.capitalize(context.getSource().getName().toLowerCase());
             }
         });
+
 
         return mm;
     }

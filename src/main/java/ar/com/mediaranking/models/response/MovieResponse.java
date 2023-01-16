@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieResponse {
+    @Schema(example = "1")
     Long id;
     @NotNull(message = "Description can not be null")
     @NotBlank(message = "Description can not be blank")
@@ -36,7 +36,7 @@ public class MovieResponse {
     String director;
 
     @Schema(example = "[\"Drama\",\"Mystery\",\"Thriller\"]")
-    private Set<String> genres = new HashSet<>();;
+    private Set<String> genres = new HashSet<>();
 
     @Min(value=1)
     @Max(value=9999)

@@ -8,6 +8,7 @@ import ar.com.mediaranking.models.repository.IReviewRepository;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.ReviewUpdate;
 import ar.com.mediaranking.models.response.ReviewResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.utils.DtoToEntityConverter;
@@ -27,34 +28,9 @@ public class ReviewServiceImpl implements IReviewService {
     private MovieRepository movieRepository;
 
     @Autowired
-    private IReviewRepository reviewRepository;
-
-    @Autowired
     private DtoToEntityConverter mapper;
     @Autowired
     private ISeriesRepository seriesRepository;
-
-    @Override
-    public ReviewEntity save(ReviewRequest reviewRequest) {
-        ReviewEntity entity = mapper.convertDtoToEntity(reviewRequest);
-        return repository.save(entity);
-    }
-
-    @Override
-    public ReviewEntity saveSeries(ReviewRequest reviewRequest, SeriesEntity series) {
-        ReviewEntity entitySaved = mapper.convertDtoToEntity(reviewRequest);
-        entitySaved.setSeries(series);
-        repository.save(entitySaved);
-        return entitySaved;
-    }
-
-    @Override
-    public ReviewEntity saveMovie(ReviewRequest reviewRequest, MovieEntity movie) {
-        ReviewEntity entitySaved = mapper.convertDtoToEntity(reviewRequest);
-        entitySaved.setMovies(movie);
-        repository.save(entitySaved);
-        return entitySaved;
-    }
 
     private Sort getSort(String order, String field) {
         if(order == null || order.isEmpty()) {
@@ -89,8 +65,41 @@ public class ReviewServiceImpl implements IReviewService {
     }
 
     @Override
-    public ReviewResponse update(Long id, ReviewRequest reviewRequest){
-        return null;
+    public ReviewResponse update(Long id,ReviewUpdate reviewRequest){
+        ReviewEntity review = repository.findById(id).orElseThrow(() -> new NotFoundException("Review with id: " + id + " not found"));
+
+        if(reviewRequest.getReview() != null) {
+            review.setReview(reviewRequest.getReview());
+        }
+        if(reviewRequest.getRating() != null) {
+            review.setRating(reviewRequest.getRating());
+        }
+
+        return mapper.convertEntityToDto(repository.save(review));
+    }
+
+    @Override
+    public ReviewResponse createReviewForMovie(ReviewRequest review) {
+        MovieEntity movie = movieRepository.findById(review.getEntityId()).orElseThrow(() -> new NotFoundException("Movie with id: " + review.getEntityId() + " not found"));
+        ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
+
+        reviewEntity.setMovies(movie);
+        movie.getReviews().add(reviewEntity);
+
+        movieRepository.save(movie);
+        return mapper.convertEntityToDto(repository.save(reviewEntity));
+    }
+
+    @Override
+    public ReviewResponse createReviewForSeries(ReviewRequest review) {
+        SeriesEntity series = seriesRepository.findById(review.getEntityId()).orElseThrow(() -> new NotFoundException("Series with id: " + review.getEntityId() + " not found"));
+        ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
+
+        reviewEntity.setSeries(series);
+        series.getReviews().add(reviewEntity);
+
+        seriesRepository.save(series);
+        return mapper.convertEntityToDto(repository.save(reviewEntity));
     }
 
 }

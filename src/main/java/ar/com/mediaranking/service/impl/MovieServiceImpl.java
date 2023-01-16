@@ -1,13 +1,12 @@
 package ar.com.mediaranking.service.impl;
 
-import ar.com.mediaranking.exception.MovieAlreadyExistsException;
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
-import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.repository.MovieRepository;
 import ar.com.mediaranking.models.request.MovieRequest;
-import ar.com.mediaranking.models.request.ReviewRequest;
+import ar.com.mediaranking.models.request.MovieUpdate;
 import ar.com.mediaranking.models.response.MovieResponse;
 import ar.com.mediaranking.service.IReviewService;
 import ar.com.mediaranking.service.MovieService;
@@ -45,7 +44,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/ {
         repository.findByTitleAndYear(request.getTitle(), request.getYear()).ifPresent(movieEntity -> {
-            throw new MovieAlreadyExistsException(
+            throw new AlreadyExistsException(
                     "There is already a movie with the name: " + request.getTitle() +
                     " and year: " + request.getYear() +
                     " with id :" + movieEntity.getId()
@@ -82,8 +81,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse update(long id, MovieRequest movie){
-        // TODO: change exception name
+    public MovieResponse update(long id, MovieUpdate movie){
         MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
 
         if(movie.getTitle() != null && !movie.getTitle().isBlank()){
@@ -106,13 +104,9 @@ public class MovieServiceImpl implements MovieService {
         return mapper.convertEntityToDto(updatedEntity);
     }
 
-    public List<MovieResponse> findByGenre(String genre){
-        return mapper.convertMoviesToDto(repository.findAllByGenres(genre));
-    }
-    
 
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
-        Specification<List<MovieEntity>> spec = where(null);
+        Specification<MovieEntity> spec = where(null);
 
 
         if(title != null){
@@ -143,14 +137,5 @@ public class MovieServiceImpl implements MovieService {
 
     }
 
-    @Override
-    public MovieResponse insertReview2Movie(Long id, ReviewRequest review) {
-        MovieEntity entity = repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a movie with the id: " + id));
-
-        ReviewEntity reviewSaved = reviewService.saveMovie(review, entity);
-        entity.getReviews().add(reviewSaved);
-        repository.save(entity);
-        return mapper.convertEntityToDto(entity);
-    }
 
 }

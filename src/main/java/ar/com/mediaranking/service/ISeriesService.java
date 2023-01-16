@@ -1,7 +1,7 @@
 package ar.com.mediaranking.service;
 
-import ar.com.mediaranking.models.request.ReviewRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
+import ar.com.mediaranking.models.request.SeriesUpdate;
 import ar.com.mediaranking.models.response.SeriesResponse;
 
 import java.util.List;
@@ -21,7 +21,5 @@ public interface ISeriesService {
 
     void deleteSerieById(Long id);
 
-    SeriesResponse insertReview2Series(Long id, ReviewRequest review);
-
-    SeriesResponse update(Long id, SeriesRequest request);
+    SeriesResponse update(Long id, SeriesUpdate request);
 }
