@@ -109,7 +109,7 @@ public class SeasonController {
             }
     )
     @Transactional
-    @PutMapping("{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonUpdateRequest request) {
         return ResponseEntity.ok(seasonService.update(id, request));
     }

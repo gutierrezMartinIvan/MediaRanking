@@ -142,7 +142,7 @@ public class MovieController {
             }
     )
     @Transactional
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id, @RequestBody MovieRequest movie) {
         // TODO: MovieUpdateRequest ?
         return ResponseEntity.ok(service.update(id, movie));

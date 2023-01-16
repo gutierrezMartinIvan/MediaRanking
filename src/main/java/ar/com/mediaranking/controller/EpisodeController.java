@@ -111,7 +111,7 @@ public class EpisodeController {
             }
     )
     @Transactional
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<EpisodeResponse> updateEpisode(@PathVariable Long id, @RequestBody EpisodeRequest request) {
         return ResponseEntity.ok(episodeService.update(id, request));
     }

@@ -119,7 +119,7 @@ public class SeriesController {
             }
     )
     @Transactional
-    @PutMapping("{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id, @RequestBody SeriesUpdateRequest request) {
         SeriesResponse response = seriesService.update(id, request);
         return ResponseEntity.ok(response);
