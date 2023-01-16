@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ISeriesRepository extends JpaRepository<SeriesEntity,Long> {
     List<SeriesEntity> findAll(Specification<SeriesEntity> spec);
+    Optional<SeriesEntity> findByTitleAndYear(String title, Integer year);
 }

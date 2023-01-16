@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.ReviewEntity;
 import ar.com.mediaranking.models.entity.SeasonEntity;
@@ -46,16 +47,20 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
-    public SeriesResponse save(SeriesRequest request) /*throws NameOrContentAreNull*/ {
+    public SeriesResponse save(SeriesRequest request) {
+        repository.findByTitleAndYear(request.getTitle(), request.getYear()).ifPresent(seriesEntity -> {
+                    throw new AlreadyExistsException(
+                            "There is already a series with the name: " + request.getTitle() +
+                                    " and year: " + request.getYear() +
+                                    " with id: " + seriesEntity.getId()
+                    );
+                });
+
         SeriesEntity entitySave = repository.save(mapper.convertDtoToEntity(request));
-
         if(request.getSeasons() != null) {
-            for (SeasonEntity season : entitySave.getSeasons()) {
+            for (SeasonEntity season : entitySave.getSeasons())
                 seasonService.save(season, entitySave);
-            }
         }
-
-
         return mapper.convertEntityToDto(repository.save(entitySave));
     }
 
@@ -80,7 +85,6 @@ public class SeriesServiceImpl implements ISeriesService {
 
     @Override
     public void deleteSerieById(Long id) {
-        //TODO check impl
         Optional<SeriesEntity> seriesOptional = repository.findById(id);
         if (!seriesOptional.isPresent())
             throw new NotFoundException("There is not a series with the id: " + id);
