@@ -163,4 +163,53 @@ public class EpisodeServiceTest {
         assertThrows(AlreadyExistsException.class, () -> service.save(requests.get(0)));
     }
 
+    @Test
+    void saveListSavesTheData() {
+        SeasonEntity season = SeasonEntity.builder().id(1L).build();
+
+        season.setEpisodes(new ArrayList<>());
+
+        given(repository.save(episodes.get(0))).willReturn(episodes.get(0));
+        given(repository.save(episodes.get(1))).willReturn(episodes.get(1));
+        given(repository.save(episodes.get(2))).willReturn(episodes.get(2));
+        given(seasonRepository.findById(1L)).willReturn(Optional.of(season));
+
+        List<EpisodeResponse> result = service.save(requests);
+
+        assert result.size() == 3;
+        verify(repository, Mockito.times(3)).save(any(EpisodeEntity.class));
+    }
+
+    @Test
+    void saveListWithNoExitingSeasonThrowsNotFoundException(){
+        given(repository.save(episodes.get(0))).willReturn(episodes.get(0));
+        given(seasonRepository.findById(1L)).willReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> service.save(requests));
+    }
+
+    @Test
+    void updateEpisodeUpdatesTheData() {
+        SeasonEntity season = SeasonEntity.builder().id(1L).build();
+        episodes.get(0).setSeason(season);
+        season.setEpisodes(new ArrayList<>());
+
+        given(repository.save(episodes.get(0))).willReturn(episodes.get(0));
+        given(repository.findById(1L)).willReturn(Optional.of(episodes.get(0)));
+        given(seasonRepository.findById(1L)).willReturn(Optional.of(season));
+
+        EpisodeResponse result = service.update(1L, requests.get(0));
+
+        assert result.getId() == 1L;
+        verify(repository, Mockito.times(1)).save(episodes.get(0));
+    }
+
+    @Test
+    void updateEpisodeWithNoExitingSeasonThrowsNotFoundException(){
+        given(repository.save(episodes.get(0))).willReturn(episodes.get(0));
+        given(seasonRepository.findById(1L)).willReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> service.update(1L, requests.get(0)));
+    }
+
 }

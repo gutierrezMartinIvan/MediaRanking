@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface MovieService {
-    boolean isNull(MovieRequest request);
 
     MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/;
 

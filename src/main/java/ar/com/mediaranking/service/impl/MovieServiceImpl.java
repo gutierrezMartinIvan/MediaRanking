@@ -37,10 +37,6 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private DtoToEntityConverter mapper;
 
-    @Override
-    public boolean isNull(MovieRequest request) {
-        return false;
-    }
 
 
     @Override
