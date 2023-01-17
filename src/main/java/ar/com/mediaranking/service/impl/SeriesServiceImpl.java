@@ -33,10 +33,6 @@ public class SeriesServiceImpl implements ISeriesService {
     @Autowired
     private SeasonService seasonService;
 
-    @Override
-    public boolean isNull(SeriesRequest request) {
-        return false;
-    }
 
     @Override
     public SeriesResponse save(SeriesRequest request) {
@@ -53,7 +49,7 @@ public class SeriesServiceImpl implements ISeriesService {
             for (SeasonEntity season : entitySave.getSeasons())
                 seasonService.save(season, entitySave);
         }
-        return mapper.convertEntityToDto(repository.save(entitySave));
+        return mapper.convertEntityToDto(entitySave);
     }
 
     @Override

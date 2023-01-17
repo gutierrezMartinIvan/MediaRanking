@@ -111,7 +111,7 @@ public class MovieServiceImpl implements MovieService {
 
 
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
-        MovieFilter seriesFilter = MovieFilter.builder()
+        MovieFilter filter = MovieFilter.builder()
                 .title(title)
                 .director(director)
                 .year(year)
@@ -119,7 +119,7 @@ public class MovieServiceImpl implements MovieService {
                 .maxDuration(maxDuration)
                 .genres(genres)
                 .build();
-        List<MovieEntity> entities = repository.findAll(MovieSpecification.getByFilters(seriesFilter));
+        List<MovieEntity> entities = repository.findAll(MovieSpecification.getByFilters(filter));
 
         return mapper.convertMoviesToDto(entities);
 

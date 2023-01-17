@@ -2,9 +2,11 @@ package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.*;
+import ar.com.mediaranking.models.entity.filter.SeasonFilter;
 import ar.com.mediaranking.models.repository.EpisodeRepository;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
 import ar.com.mediaranking.models.repository.SeasonRepository;
+import ar.com.mediaranking.models.repository.specification.SeasonSpecification;
 import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.request.SeasonUpdate;
 import ar.com.mediaranking.models.response.SeasonResponse;
@@ -16,8 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class SeasonServiceImpl implements SeasonService {
@@ -110,22 +110,11 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Override
     public List<SeasonResponse> getAll(Long seriesId, Integer seasonNumber, Integer year, String title) {
-        Specification<SeasonEntity> spec = where(null);
+        SeasonFilter filter = new SeasonFilter(title, seasonNumber, year, seriesId);
+        Specification<SeasonEntity> spec = SeasonSpecification.getByFilters(filter);
 
-        if(title != null){
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
-        }
-        if(seasonNumber != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("seasonNumber"), seasonNumber));
-        }
-        if(year != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("year"), year));
-        }
-        if(seriesId != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("series").get("id"), seriesId));
-        }
 
-        return mapper.convertEntityToDto(repository.findAll(spec));
+        return mapper.convertSeasonsToDto(repository.findAll(spec));
     }
 
     @Override

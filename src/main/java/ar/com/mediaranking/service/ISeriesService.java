@@ -9,8 +9,6 @@ import java.util.Set;
 
 public interface ISeriesService {
 
-    boolean isNull(SeriesRequest request);
-
     SeriesResponse save(SeriesRequest request);
 
     List<SeriesResponse> getAll();
