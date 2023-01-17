@@ -2,15 +2,22 @@ package ar.com.mediaranking.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "series")
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SeriesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,13 +50,29 @@ public class SeriesEntity {
     @JoinTable(name = "series_genres",
     joinColumns = @JoinColumn(name = "series_id"),
     inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @ToString.Exclude
     private Set<GenreEntity> genres;
 
     @OneToMany(mappedBy = "series", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("seasonNumber ASC")
+    @ToString.Exclude
     List<SeasonEntity> seasons;
 
     @OneToMany(mappedBy = "series")
+    @ToString.Exclude
     private List<ReviewEntity> reviews = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        SeriesEntity series = (SeriesEntity) o;
+        return id != null && Objects.equals(id, series.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
 

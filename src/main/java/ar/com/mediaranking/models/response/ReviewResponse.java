@@ -32,5 +32,5 @@ public class ReviewResponse {
     @NotBlank(message = "Rating can not be blank")
     @NotEmpty(message = "Rating can not be empty")
     @Schema(description = "Rating must be between 1 and 10", example = "9")
-    private String rating;
+    private Integer rating;
 }

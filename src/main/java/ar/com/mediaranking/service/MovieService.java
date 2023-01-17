@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface MovieService {
 
-    MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/;
+    MovieResponse save(MovieRequest request);
 
     List<MovieResponse> findAll();
 

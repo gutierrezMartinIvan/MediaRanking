@@ -190,18 +190,23 @@ public class EpisodeServiceTest {
 
     @Test
     void updateEpisodeUpdatesTheData() {
-        SeasonEntity season = SeasonEntity.builder().id(1L).build();
+        SeasonEntity season = SeasonEntity.builder().id(1L).episodes(new ArrayList<>()).build();
         episodes.get(0).setSeason(season);
-        season.setEpisodes(new ArrayList<>());
 
-        given(repository.save(episodes.get(0))).willReturn(episodes.get(0));
+        SeasonEntity season2 = SeasonEntity.builder().id(2L).episodes(new ArrayList<>()).build();
+
+        EpisodeEntity updated = EpisodeEntity.builder().id(1L).title(episodes.get(2).getTitle()).season(season2).description(episodes.get(2).getDescription()).episodeNumber(episodes.get(2).getEpisodeNumber()).build();
+        given(repository.save(updated)).willReturn(updated);
         given(repository.findById(1L)).willReturn(Optional.of(episodes.get(0)));
         given(seasonRepository.findById(1L)).willReturn(Optional.of(season));
+        given(seasonRepository.findById(2L)).willReturn(Optional.of(season2));
 
-        EpisodeResponse result = service.update(1L, requests.get(0));
+        EpisodeRequest request = requests.get(2);
+        request.setSeasonId(2L);
+        EpisodeResponse result = service.update(1L, request);
 
         assert result.getId() == 1L;
-        verify(repository, Mockito.times(1)).save(episodes.get(0));
+        verify(repository, Mockito.times(1)).save(updated);
     }
 
     @Test
