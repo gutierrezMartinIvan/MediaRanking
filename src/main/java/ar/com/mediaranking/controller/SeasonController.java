@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -77,7 +78,7 @@ public class SeasonController {
     @Transactional
     @PostMapping
     public ResponseEntity<SeasonResponse> createSeason(@Valid @RequestBody SeasonRequest request) {
-        return ResponseEntity.ok(seasonService.save(request));
+        return ResponseEntity.created(URI.create("/review")).body(seasonService.save(request));
     }
 
     @Operation(
@@ -94,7 +95,7 @@ public class SeasonController {
     @Transactional
     @PostMapping("/list")
     public ResponseEntity<List<SeasonResponse>> createSeason(@Valid @RequestBody List<SeasonRequest> request) {
-        return ResponseEntity.ok(seasonService.save(request));
+        return ResponseEntity.created(URI.create("/review")).body(seasonService.save(request));
     }
 
     @Operation(
