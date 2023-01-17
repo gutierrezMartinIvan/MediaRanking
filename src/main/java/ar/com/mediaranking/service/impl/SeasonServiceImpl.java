@@ -47,15 +47,6 @@ public class SeasonServiceImpl implements SeasonService {
        return savedSeason;
     }
 
-    @Override
-    public List<SeasonEntity> save(List<SeasonRequest> season, SeriesEntity series) {
-        List<SeasonEntity> seasons = new ArrayList<>();
-        for (SeasonRequest seasonRequest : season) {
-            seasons.add(save(mapper.convertDtoToEntity(seasonRequest), series));
-        }
-        return seasons;
-    }
-
 
     @Override
     public SeasonResponse save(SeasonRequest request) {
