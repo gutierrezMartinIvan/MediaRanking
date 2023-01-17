@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -40,6 +41,7 @@ public class MovieController {
             value = {
                     @ApiResponse(responseCode = "200", description = "Movies found successfully!")
             })
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     public ResponseEntity<List<MovieResponse>> getMovies() {
         return ResponseEntity.ok(service.findAll());
@@ -54,6 +56,7 @@ public class MovieController {
                     @ApiResponse(responseCode = "200", description = "Movies found successfully!")
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/filter")
     public ResponseEntity<List<MovieResponse>> getMoviesFilter(@RequestParam(required = false) String title,
                                                                @RequestParam(required = false) String director,
@@ -77,6 +80,7 @@ public class MovieController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{id}")
     public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
@@ -93,6 +97,7 @@ public class MovieController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PostMapping
     public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest movie) {
@@ -109,6 +114,7 @@ public class MovieController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/list")
     public ResponseEntity<List<MovieResponse>> createMovieList(@Valid @RequestBody List<MovieRequest> movieList) {
         return ResponseEntity.ok(service.saveList(movieList));
@@ -125,6 +131,7 @@ public class MovieController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @DeleteMapping
     public void deleteMovie(@RequestParam long id) {
@@ -142,6 +149,7 @@ public class MovieController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PatchMapping("/{id}")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable long id,@Valid @RequestBody MovieUpdate movie) {

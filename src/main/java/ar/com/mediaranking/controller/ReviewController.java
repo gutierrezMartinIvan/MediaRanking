@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -42,6 +43,7 @@ public class ReviewController {
                     @ApiResponse(responseCode = "200", description = "Reviews found successfully!")
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/movie")
     public ResponseEntity<List<ReviewResponse>> getReviewsByMovieId(@RequestParam Long id, @RequestParam(required = false) @Parameter(schema=@Schema(description="order", type="string", allowableValues= {"asc", "des"})) String order) {
         return ResponseEntity.ok(reviewService.findAllByMovieId(id, order));
@@ -56,6 +58,7 @@ public class ReviewController {
                     @ApiResponse(responseCode = "201", description = "Review created successfully!"),
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/movie")
     public ResponseEntity<ReviewResponse> createReviewForMovie(@Valid @RequestBody ReviewRequest review) {
         return new ResponseEntity<>(reviewService.createReviewForMovie(review), HttpStatus.CREATED);
@@ -70,6 +73,7 @@ public class ReviewController {
                     @ApiResponse(responseCode = "201", description = "Review created successfully!"),
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/series")
     public ResponseEntity<ReviewResponse> createReviewForSeries(@Valid @RequestBody ReviewRequest review) {
         return new ResponseEntity<>(reviewService.createReviewForSeries(review), HttpStatus.CREATED);
@@ -86,6 +90,7 @@ public class ReviewController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/series")
     public ResponseEntity<List<ReviewResponse>> getReviewsBySeriesId(@RequestParam Long id, @RequestParam(required = false) @Parameter(schema=@Schema(description="order", type="string", allowableValues= {"asc", "des"})) String order) {
         return ResponseEntity.ok(reviewService.findAllBySeriesId(id, order));
@@ -102,6 +107,7 @@ public class ReviewController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/user")
     public ResponseEntity<List<ReviewResponse>> getReviewsByUserId(@RequestParam String id) {
         return ResponseEntity.ok(reviewService.findAllByUserId(id));
@@ -118,6 +124,7 @@ public class ReviewController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PatchMapping("{id}")
     public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long id,@Valid @RequestBody ReviewUpdate reviewRequest) {

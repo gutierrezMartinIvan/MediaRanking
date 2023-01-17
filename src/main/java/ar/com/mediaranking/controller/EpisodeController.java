@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,6 +39,7 @@ public class EpisodeController {
                     @ApiResponse(responseCode = "200", description = "Episodes found successfully!")
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     public ResponseEntity<List<EpisodeResponse>> getAllEpisodes(@RequestParam(required = false) Long seriesId,
                                                                @RequestParam(required = false) Long seasonId,
@@ -60,6 +62,7 @@ public class EpisodeController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{id}")
     public ResponseEntity<EpisodeResponse> getEpisodeById(@PathVariable Long id) {
         return ResponseEntity.ok(episodeService.getById(id));
@@ -76,6 +79,7 @@ public class EpisodeController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PostMapping
     public ResponseEntity<EpisodeResponse> createEpisode(@RequestBody EpisodeRequest request) {
@@ -93,6 +97,7 @@ public class EpisodeController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PostMapping("/save/list")
     public ResponseEntity<List<EpisodeResponse>> createEpisode(@Valid @RequestBody List<EpisodeRequest> request) {
@@ -110,6 +115,7 @@ public class EpisodeController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PatchMapping("/{id}")
     public ResponseEntity<EpisodeResponse> updateEpisode(@PathVariable Long id, @RequestBody EpisodeRequest request) {
@@ -127,6 +133,7 @@ public class EpisodeController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @DeleteMapping("/{id}")
     public void deleteEpisode(@PathVariable Long id) {

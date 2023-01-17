@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,6 +39,7 @@ public class SeasonController {
                     @ApiResponse(responseCode = "200", description = "Seasons found successfully!")
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     public ResponseEntity<List<SeasonResponse>> getAllSeasons(@RequestParam(required = false) Long seriesId,
                                                               @RequestParam(required = false) Integer seasonNumber,
@@ -58,6 +60,7 @@ public class SeasonController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{id}")
     public ResponseEntity<SeasonResponse> getSeasonById(@PathVariable Long id) {
         return ResponseEntity.ok(seasonService.getById(id));
@@ -74,6 +77,7 @@ public class SeasonController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PostMapping
     public ResponseEntity<SeasonResponse> createSeason(@Valid @RequestBody SeasonRequest request) {
@@ -91,6 +95,7 @@ public class SeasonController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PostMapping("/list")
     public ResponseEntity<List<SeasonResponse>> createSeason(@Valid @RequestBody List<SeasonRequest> request) {
@@ -108,6 +113,7 @@ public class SeasonController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PatchMapping("{id}")
     public ResponseEntity<SeasonResponse> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonUpdate request) {
@@ -125,6 +131,7 @@ public class SeasonController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @DeleteMapping("{id}")
     public void deleteSeason(@PathVariable Long id) {

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,6 +39,7 @@ public class SeriesController {
             value = {
                     @ApiResponse(responseCode = "200", description = "Series found successfully!")
             })
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping()
     public ResponseEntity<List<SeriesResponse>> getAllSeries() {
         return ResponseEntity.ok(seriesService.getAll());
@@ -50,6 +52,7 @@ public class SeriesController {
             value = {
                     @ApiResponse(responseCode = "200", description = "Series found successfully!")
             })
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/filter")
     public ResponseEntity<List<SeriesResponse>> getSeriesByFilters(@RequestParam(required = false) String title,
                                                                    @RequestParam(required = false) String author,
@@ -69,6 +72,7 @@ public class SeriesController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{id}")
     public ResponseEntity<SeriesResponse> getSeriesById(@PathVariable Long id) {
         return ResponseEntity.ok(seriesService.getSerieById(id));
@@ -85,6 +89,7 @@ public class SeriesController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PostMapping()
     public ResponseEntity<SeriesResponse> createSeries(@Valid @RequestBody SeriesRequest request) {
@@ -102,6 +107,7 @@ public class SeriesController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("{id}")
     public void deleteSeriesById(@PathVariable Long id) {
         seriesService.deleteSerieById(id);
@@ -118,6 +124,7 @@ public class SeriesController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     @Transactional
     @PatchMapping("{id}")
     public ResponseEntity<SeriesResponse> updateSeries(@PathVariable Long id,@Valid @RequestBody SeriesUpdate request) {
