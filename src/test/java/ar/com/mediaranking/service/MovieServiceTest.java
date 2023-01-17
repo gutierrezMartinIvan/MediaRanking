@@ -36,7 +36,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.springframework.data.jpa.domain.Specification.where;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -48,14 +47,9 @@ public class MovieServiceTest {
     @Mock
     private DtoToEntityConverter mapper;
 
-    @Mock
-    private MovieSpecification movieSpecification;
-
     @InjectMocks
     private MovieServiceImpl service;
 
-    @InjectMocks
-    private MovieSpecification specification = new MovieSpecification();
 
     private List<MovieRequest> movieRequests;
     private List<MovieEntity> movieEntities;
@@ -212,33 +206,22 @@ public class MovieServiceTest {
 
     @Test
     void findByFilterWithNoFilterReturnsAllMovies() {
-        MovieFilter filter = MovieFilter.builder().build();
-
-        Specification<MovieEntity> spec = specification.getByFilters(filter);
-
-        given(repository.findAll(spec)).willReturn(movieEntities);
-        given(movieSpecification.getByFilters(filter)).willReturn(spec);
+        given(repository.findAll(any(Specification.class))).willReturn(movieEntities);
 
         List<MovieResponse> movies = service.findByFilter(null, null, null, null, null, null);
-        verify(repository, Mockito.times(1)).findAll(spec);
+        verify(repository, Mockito.times(1)).findAll(any(Specification.class));
         assert !movies.isEmpty();
         assertEquals(movies, movieResponses);
     }
 
     @Test
     void findByFilterWithFilterReturnsFilteredMovies() {
-        MovieFilter filter = MovieFilter.builder().title("Title").director("Director").year(2000).genres(Set.of("Fiction")).maxDuration(100).minDuration(10).build();
-
-        Specification<MovieEntity> spec = specification.getByFilters(filter);
-
-        given(repository.findAll(spec)).willReturn(movieEntities);
-        given(movieSpecification.getByFilters(filter)).willReturn(spec);
+        given(repository.findAll(any(Specification.class))).willReturn(movieEntities);
         given(mapper.convertSetStringToGenre(Set.of("Fiction"))).willReturn(Set.of(GenreEntity.builder().name("Fiction").build()));
 
         List<MovieResponse> movies = service.findByFilter("Title", "Director", 2000, 10, 100, Set.of("Fiction"));
 
-        verify(movieSpecification, Mockito.times(1)).getByFilters(filter);
-        verify(repository, Mockito.times(1)).findAll(spec);
+        verify(repository, Mockito.times(1)).findAll(any(Specification.class));
         assert !movies.isEmpty();
         assertEquals(movies, movieResponses);
     }

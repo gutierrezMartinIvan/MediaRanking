@@ -15,13 +15,10 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+
 public class SeriesSpecification {
 
-    @Autowired
-    private DtoToEntityConverter mapper;
-
-    public Specification<SeriesEntity> getByFilters(SeriesFilter filter) {
+    public static Specification<SeriesEntity> getByFilters(SeriesFilter filter) {
         return (((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -38,7 +35,6 @@ public class SeriesSpecification {
                                 criteriaBuilder.lower(root.get("author")),
                                 "%" + filter.getAuthor().toLowerCase() + "%"));
             }
-
             if (filter.getYear() != null) {
                 predicates.add(
                         criteriaBuilder.equal(
@@ -46,10 +42,14 @@ public class SeriesSpecification {
                 );
             }
 
-            if (!filter.getGenres().isEmpty()) {
+            if (filter.getGenres() != null && !filter.getGenres().isEmpty()) {
                 Join<SeriesEntity, GenreEntity> join = root.join("genres");
                 CriteriaBuilder.In<String> in = criteriaBuilder.in(join.get("name"));
-                mapper.convertSetStringToGenre(filter.getGenres()).forEach(genre -> in.value(genre.getName()));
+
+                //TODO check if geners is in enum;
+                for(String genre : filter.getGenres()) {
+                    in.value(genre.toUpperCase());
+                }
                 predicates.add(in);
             }
 

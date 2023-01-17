@@ -33,8 +33,6 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieRepository repository;
 
-    @Autowired
-    private MovieSpecification movieSpecification;
 
     @Autowired
     private DtoToEntityConverter mapper;
@@ -125,7 +123,7 @@ public class MovieServiceImpl implements MovieService {
                 .maxDuration(maxDuration)
                 .genres(genres)
                 .build();
-        List<MovieEntity> entities = repository.findAll(movieSpecification.getByFilters(seriesFilter));
+        List<MovieEntity> entities = repository.findAll(MovieSpecification.getByFilters(seriesFilter));
 
         return mapper.convertMoviesToDto(entities);
 

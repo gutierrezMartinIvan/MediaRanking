@@ -31,12 +31,6 @@ public class SeriesServiceImpl implements ISeriesService {
     private DtoToEntityConverter mapper;
 
     @Autowired
-    private SeriesSpecification seriesSpecification;
-
-    @Autowired
-    private IReviewService reviewService;
-
-    @Autowired
     private SeasonService seasonService;
 
     @Override
@@ -76,7 +70,7 @@ public class SeriesServiceImpl implements ISeriesService {
     @Override
     public List<SeriesResponse> getByFilters(String tittle, String author, Set<String> genres, Integer year) {
         SeriesFilter seriesFilter = new SeriesFilter(tittle, author, year, genres);
-        List<SeriesEntity> entities = repository.findAll(seriesSpecification.getByFilters(seriesFilter));
+        List<SeriesEntity> entities = repository.findAll(SeriesSpecification.getByFilters(seriesFilter));
         List<SeriesResponse> responses = mapper.convertSeriesToDto(entities);
         return responses;
     }

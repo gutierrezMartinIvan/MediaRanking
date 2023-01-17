@@ -9,7 +9,6 @@ import ar.com.mediaranking.models.response.EpisodeResponse;
 import java.util.List;
 
 public interface EpisodeService {
-    EpisodeEntity save(EpisodeEntity epsidode, SeasonEntity seasonEntity);
 
     EpisodeResponse save(EpisodeRequest request);
 
