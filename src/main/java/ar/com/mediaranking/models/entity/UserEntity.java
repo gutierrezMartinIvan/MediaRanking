@@ -4,11 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
-import java.sql.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +45,4 @@ public class UserEntity {
     @NotEmpty(message = "Last name can not be empty")
     private String lastName;
 
-    @Column(name = "date_of_birth")
-    @NotNull(message = "Date of birth can not be null")
-    @NotBlank(message = "Date of birth can not be blank")
-    @NotEmpty(message = "Date of birth can not be empty")
-    private Date dateOfBirth;
 }

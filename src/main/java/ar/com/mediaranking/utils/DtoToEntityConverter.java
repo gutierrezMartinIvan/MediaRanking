@@ -129,4 +129,12 @@ public class DtoToEntityConverter {
                 .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
+
+    public UserEntity convertDtoToEntity(UserRequest userRequest) {
+        return modelMapper.map(userRequest, UserEntity.class);
+    }
+
+    public UserResponse convertEntityToDto(UserEntity userEntity) {
+        return modelMapper.map(userEntity, UserResponse.class);
+    }
 }
