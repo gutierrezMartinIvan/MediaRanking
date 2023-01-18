@@ -47,6 +47,8 @@ public class SeasonEntity {
     @ToString.Exclude
     List<EpisodeEntity> episodes = new ArrayList<>();
 
+    //TODO: Add Year
+
     @ManyToOne
     @JoinColumn(name = "series_id")
     private SeriesEntity series;

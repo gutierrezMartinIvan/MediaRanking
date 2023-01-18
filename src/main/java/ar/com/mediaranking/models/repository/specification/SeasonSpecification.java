@@ -26,12 +26,12 @@ public class SeasonSpecification {
                                 criteriaBuilder.lower(root.get("title")),
                                 "%" + filter.getTitle().toLowerCase() + "%"));
             }
-            if (filter.getYear() != null) {
+            /*if (filter.getYear() != null) {
                 predicates.add(
                         criteriaBuilder.equal(
                                 root.get("year"), filter.getYear())
                 );
-            }
+            }*/
             if (filter.getSeasonNumber() != null) {
                 predicates.add(
                         criteriaBuilder.equal(

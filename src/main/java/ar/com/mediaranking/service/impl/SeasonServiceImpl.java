@@ -104,7 +104,6 @@ public class SeasonServiceImpl implements SeasonService {
         SeasonFilter filter = new SeasonFilter(title, seasonNumber, year, seriesId);
         Specification<SeasonEntity> spec = SeasonSpecification.getByFilters(filter);
 
-
         return mapper.convertSeasonsToDto(repository.findAll(spec));
     }
 
