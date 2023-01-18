@@ -41,7 +41,7 @@ public class MovieController {
             value = {
                     @ApiResponse(responseCode = "200", description = "Movies found successfully!")
             })
-    @SecurityRequirement(name = "Bearer Authentication")
+    //@SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     public ResponseEntity<List<MovieResponse>> getMovies() {
         return ResponseEntity.ok(service.findAll());
