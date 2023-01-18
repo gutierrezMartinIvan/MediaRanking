@@ -20,7 +20,7 @@ public class GenreEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Length(min = 1, max = 30)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
