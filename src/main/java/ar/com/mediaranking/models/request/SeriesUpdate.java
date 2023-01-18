@@ -2,12 +2,14 @@ package ar.com.mediaranking.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
 public class SeriesUpdate {
 
     @Schema(description = "Series title, this field is optional and if it is blank it will be ignore", example = "Dragon Ball Super")

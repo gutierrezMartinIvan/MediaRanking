@@ -3,11 +3,13 @@ package ar.com.mediaranking.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class SeasonRequest {
     @NotNull(message = "Series id can not be null")
     @Min(value=1)

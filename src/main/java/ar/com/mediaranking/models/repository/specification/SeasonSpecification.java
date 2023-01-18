@@ -1,24 +1,22 @@
 package ar.com.mediaranking.models.repository.specification;
 
 import ar.com.mediaranking.models.entity.GenreEntity;
+import ar.com.mediaranking.models.entity.MovieEntity;
+import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
-import ar.com.mediaranking.models.entity.filter.SeriesFilter;
-import ar.com.mediaranking.utils.DtoToEntityConverter;
+import ar.com.mediaranking.models.entity.filter.MovieFilter;
+import ar.com.mediaranking.models.entity.filter.SeasonFilter;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class SeriesSpecification {
-
-    public static Specification<SeriesEntity> getByFilters(SeriesFilter filter) {
+public class SeasonSpecification {
+    public static Specification<SeasonEntity> getByFilters(SeasonFilter filter) {
         return (((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -28,29 +26,23 @@ public class SeriesSpecification {
                                 criteriaBuilder.lower(root.get("title")),
                                 "%" + filter.getTitle().toLowerCase() + "%"));
             }
-
-            if (StringUtils.hasLength(filter.getAuthor())) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("author")),
-                                "%" + filter.getAuthor().toLowerCase() + "%"));
-            }
-            if (filter.getYear() != null) {
+            /*if (filter.getYear() != null) {
                 predicates.add(
                         criteriaBuilder.equal(
                                 root.get("year"), filter.getYear())
                 );
+            }*/
+            if (filter.getSeasonNumber() != null) {
+                predicates.add(
+                        criteriaBuilder.equal(
+                                root.get("seasonNumber"), filter.getSeasonNumber())
+                );
             }
-
-            if (filter.getGenres() != null && !filter.getGenres().isEmpty()) {
-                Join<SeriesEntity, GenreEntity> join = root.join("genres");
-                CriteriaBuilder.In<String> in = criteriaBuilder.in(join.get("name"));
-
-                //TODO check if geners is in enum;
-                for(String genre : filter.getGenres()) {
-                    in.value(genre.toUpperCase());
-                }
-                predicates.add(in);
+            if (filter.getSeriesId() != null) {
+                predicates.add(
+                        criteriaBuilder.equal(
+                                root.get("series").get("id"), filter.getSeriesId())
+                );
             }
 
             query.distinct(true);

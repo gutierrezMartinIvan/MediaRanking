@@ -21,8 +21,7 @@ public class ReviewRequest {
     @NotBlank(message = "review can not be blank")
     @Schema(example = "This is a review")
     private String review;
-
-    @NotBlank(message = "Rating can not be blank")
     @Schema(description = "Rating must be between 1 and 10", example = "9")
+    @NotNull(message = "rating can not be null")
     private Integer rating;
 }

@@ -4,7 +4,11 @@ import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
+import ar.com.mediaranking.models.entity.SeriesEntity;
+import ar.com.mediaranking.models.entity.filter.MovieFilter;
+import ar.com.mediaranking.models.entity.filter.SeriesFilter;
 import ar.com.mediaranking.models.repository.MovieRepository;
+import ar.com.mediaranking.models.repository.specification.MovieSpecification;
 import ar.com.mediaranking.models.request.MovieRequest;
 import ar.com.mediaranking.models.request.MovieUpdate;
 import ar.com.mediaranking.models.response.MovieResponse;
@@ -29,16 +33,10 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieRepository repository;
 
-    @Autowired
-    private IReviewService reviewService;
 
     @Autowired
     private DtoToEntityConverter mapper;
 
-    @Override
-    public boolean isNull(MovieRequest request) {
-        return false;
-    }
 
 
     @Override
@@ -71,7 +69,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteById(long id){
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("There is no movie with id: " + id);
+        }
     }
 
     @Override
@@ -86,6 +88,9 @@ public class MovieServiceImpl implements MovieService {
 
         if(movie.getTitle() != null && !movie.getTitle().isBlank()){
             entity.setTitle(movie.getTitle());
+        }
+        if(movie.getDescription() != null && !movie.getDescription().isBlank()){
+            entity.setDescription(movie.getDescription());
         }
         if(movie.getDirector() != null && !movie.getDirector().isBlank()){
             entity.setDirector(movie.getDirector());
@@ -106,34 +111,17 @@ public class MovieServiceImpl implements MovieService {
 
 
     public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
-        Specification<MovieEntity> spec = where(null);
+        MovieFilter filter = MovieFilter.builder()
+                .title(title)
+                .director(director)
+                .year(year)
+                .minDuration(minDuration)
+                .maxDuration(maxDuration)
+                .genres(genres)
+                .build();
+        List<MovieEntity> entities = repository.findAll(MovieSpecification.getByFilters(filter));
 
-
-        if(title != null){
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
-        }
-        if(director != null){
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("director")), "%" + director.toLowerCase() + "%"));
-        }
-        if(year != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("year"), year));
-        }
-        if(minDuration != null){
-            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("duration"), minDuration));
-        }
-        if(maxDuration != null){
-            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("duration"), maxDuration));
-        }
-        if(genres != null){
-            spec = spec.and((root, query, cb) -> {
-                Join<MovieEntity, GenreEntity> join = root.join("genres");
-                CriteriaBuilder.In<String> in = cb.in(join.get("name"));
-                mapper.convertSetStringToGenre(genres).forEach(genre -> in.value(genre.getName()));
-                return in;
-            });
-        }
-
-        return mapper.convertMoviesToDto(repository.findAll(spec));
+        return mapper.convertMoviesToDto(entities);
 
     }
 

@@ -11,8 +11,6 @@ import java.util.List;
 public interface SeasonService {
     SeasonEntity save(SeasonEntity season, SeriesEntity entity);
 
-    List<SeasonEntity> save(List<SeasonRequest> season, SeriesEntity entity);
-
     SeasonResponse save(SeasonRequest request);
 
     List<SeasonResponse> save(List<SeasonRequest> request);
@@ -21,7 +19,6 @@ public interface SeasonService {
 
     void delete(Long id);
 
-    void deleteAll(List<SeasonEntity> seasons);
 
     List<SeasonResponse> getAll(Long seriesId, Integer seasonNumber, Integer year, String title);
 

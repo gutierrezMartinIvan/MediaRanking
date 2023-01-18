@@ -3,12 +3,14 @@ package ar.com.mediaranking.models.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
 public class MovieUpdate {
     @Schema(description = "Movie title", example = "Spider-Man: Into the Spider-Verse")
     String title;

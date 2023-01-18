@@ -1,12 +1,15 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.EpisodeEntity;
 import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.SeasonEntity;
+import ar.com.mediaranking.models.entity.filter.EpisodeFilter;
 import ar.com.mediaranking.models.repository.EpisodeRepository;
 import ar.com.mediaranking.models.repository.SeasonRepository;
+import ar.com.mediaranking.models.repository.specification.EpisodeSpecification;
 import ar.com.mediaranking.models.request.EpisodeRequest;
 import ar.com.mediaranking.models.response.EpisodeResponse;
 import ar.com.mediaranking.service.EpisodeService;
@@ -35,16 +38,16 @@ public class EpisodeServiceImpl implements EpisodeService {
     private DtoToEntityConverter mapper;
 
     @Override
-    public EpisodeEntity save(EpisodeEntity episode, SeasonEntity seasonEntity) {
-        episode.setSeason(seasonEntity);
-        return repository.save(episode);
-    }
-
-    @Override
     public EpisodeResponse save(EpisodeRequest request) {
         SeasonEntity seasonEntity = seasonRepository.findById(request.getSeasonId()).orElseThrow(() -> new NotFoundException("Season not found"));
-        EpisodeEntity episodeEntity = save(mapper.convertDtoToEntity(request), seasonEntity);
-        return mapper.convertEntityToDto(episodeEntity);
+
+        if(seasonEntity.getEpisodes().stream().anyMatch(episode -> episode.getEpisodeNumber().equals(request.getEpisodeNumber()))) {
+            throw new AlreadyExistsException("Episode already exists with that number");
+        }
+        EpisodeEntity episode = mapper.convertDtoToEntity(request);
+        episode.setSeason(seasonEntity);
+
+        return mapper.convertEntityToDto(repository.save(episode));
     }
 
     @Override
@@ -83,38 +86,24 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("Episode with id " + id + " not found");
+        }
     }
 
     @Override
     public List<EpisodeResponse> getAll(Long seriesId, Long seasonId, Integer seasonNumber, Integer episodeNumber, Integer year, String title) {
-        Specification<EpisodeEntity> spec = where(null);
-
-
-        if(title != null){
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
-        }
-        if(year != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("year"), year));
-        }
-        if(seasonNumber != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("seasonNumber"), seasonNumber));
-        }
-        if(episodeNumber != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("episodeNumber"), episodeNumber));
-        }
-        if(seriesId != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("season").get("series").get("id"), seriesId));
-        }
-        if(seasonId != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("season").get("id"), seasonId));
-        }
+        EpisodeFilter filter = EpisodeFilter.builder().title(title).episodeNumber(episodeNumber).seasonNumber(seasonNumber).year(year).seasonId(seasonId).seriesId(seriesId).build();
+        Specification<EpisodeEntity> spec = EpisodeSpecification.getByFilters(filter);
 
         return mapper.convertEpisodesToDto(repository.findAll(spec));
     }
 
     @Override
     public EpisodeResponse getById(Long id) {
-        return null;
+        EpisodeEntity episode = repository.findById(id).orElseThrow(() -> new NotFoundException("Episode with id " + id + " not found"));
+        return mapper.convertEntityToDto(episode);
     }
 }

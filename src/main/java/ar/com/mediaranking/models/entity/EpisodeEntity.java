@@ -2,10 +2,19 @@ package ar.com.mediaranking.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
+
 @Entity
 @Table(name = "episodes")
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EpisodeEntity {
 
     @Id
@@ -36,4 +45,16 @@ public class EpisodeEntity {
     @JoinColumn(name = "season_id")
     private SeasonEntity season;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        EpisodeEntity episode = (EpisodeEntity) o;
+        return id != null && Objects.equals(id, episode.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
