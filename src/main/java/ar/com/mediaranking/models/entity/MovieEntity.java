@@ -31,7 +31,6 @@ public class MovieEntity {
     @Column(nullable = false)
     String director;
 
-    @Column(nullable = false)
     @ManyToMany
     @JoinTable(name = "movies_genres",
             joinColumns = @JoinColumn(name = "movie_id"),
