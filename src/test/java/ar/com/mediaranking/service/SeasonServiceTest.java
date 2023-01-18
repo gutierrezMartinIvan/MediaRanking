@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 
@@ -33,6 +34,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -294,6 +296,29 @@ public class SeasonServiceTest {
         assertThrows(NotFoundException.class, () -> service.update(1L,request));
 
         verify(repository,Mockito.times(1)).findById(1L);
+    }
+
+    @Test
+    void updateWithNonExistingseasonThrowsException(){
+        SeriesEntity series = new SeriesEntity();
+        SeasonEntity entity = new SeasonEntity(1L,1,"Season","Description",null,series);
+        SeasonUpdate request = new SeasonUpdate(2L,2,"Season 2","Description 2");
+
+        given(repository.findById(1L)).willReturn(Optional.of(entity));
+        given(seriesRepository.findById(2L)).willReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> service.update(1L,request));
+
+        verify(repository,Mockito.times(1)).findById(1L);
+        verify(seriesRepository,Mockito.times(1)).findById(2L);
+    }
+
+    @Test
+    void deleteSeasonThatDoesNotExistThrowsException(){
+        doThrow(EmptyResultDataAccessException.class).when(repository).deleteById(1L);
+        assertThrows(NotFoundException.class, () -> service.delete(1L));
+
+        verify(repository,Mockito.times(1)).deleteById(1L);
     }
 
 }
