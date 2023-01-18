@@ -49,7 +49,7 @@ public class MovieEntity {
     Integer  year;
 
 
-    @OneToMany(mappedBy = "movies", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movies", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     List<ReviewEntity> reviews = new ArrayList<>();
 

@@ -95,7 +95,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     @Override
     public List<EpisodeResponse> getAll(Long seriesId, Long seasonId, Integer seasonNumber, Integer episodeNumber, Integer year, String title) {
-        EpisodeFilter filter = EpisodeFilter.builder().title(title).episodeNumber(episodeNumber).seasonNumber(seasonNumber).year(year).seasonId(seasonId).seriesId(seriesId).build();
+        EpisodeFilter filter = new EpisodeFilter(seriesId, seasonId, seasonNumber, episodeNumber, year, title);
         Specification<EpisodeEntity> spec = EpisodeSpecification.getByFilters(filter);
 
         return mapper.convertEpisodesToDto(repository.findAll(spec));

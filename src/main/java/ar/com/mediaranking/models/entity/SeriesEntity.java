@@ -58,7 +58,7 @@ public class SeriesEntity {
     @ToString.Exclude
     List<SeasonEntity> seasons;
 
-    @OneToMany(mappedBy = "series")
+    @OneToMany(mappedBy = "series", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ReviewEntity> reviews = new ArrayList<>();
 
