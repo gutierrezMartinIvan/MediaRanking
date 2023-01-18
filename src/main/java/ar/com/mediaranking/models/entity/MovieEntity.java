@@ -32,10 +32,11 @@ public class MovieEntity {
     String director;
 
     @Column(nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "movies_genres",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @ToString.Exclude
     private Set<GenreEntity> genres = new HashSet<>();
 
     @Column(nullable = false)
