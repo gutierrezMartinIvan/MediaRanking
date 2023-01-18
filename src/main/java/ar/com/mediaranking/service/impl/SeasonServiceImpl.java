@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.*;
 import ar.com.mediaranking.models.entity.filter.SeasonFilter;
@@ -35,6 +36,7 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Override
     public SeasonEntity save(SeasonEntity season, SeriesEntity entity) {
+        //Todo check if this method is necessary
         season.setSeries(entity);
 
        SeasonEntity savedSeason = repository.save(season);
@@ -51,7 +53,10 @@ public class SeasonServiceImpl implements SeasonService {
     @Override
     public SeasonResponse save(SeasonRequest request) {
         SeriesEntity serie = seriesRepository.findById(request.getSeriesId()).orElseThrow(
-                () -> new NotFoundException("No se encontro la serie con id: " + request.getSeriesId())
+                () -> new NotFoundException("Series with id: " + request.getSeriesId() +" not found")
+        );
+        repository.findByTitleAndSeasonNumberAndSeries(request.getTitle(),request.getSeasonNumber(),serie).ifPresent(
+                season -> { throw new AlreadyExistsException("That season already exists");}
         );
 
         SeasonEntity season = save(mapper.convertDtoToEntity(request), serie);
@@ -92,11 +97,6 @@ public class SeasonServiceImpl implements SeasonService {
         } catch (Exception e) {
             throw new NotFoundException("Season with ID: " + id +" not found");
         }
-    }
-
-    @Override
-    public void deleteAll(List<SeasonEntity> seasons) {
-        repository.deleteAll(seasons);
     }
 
     @Override
