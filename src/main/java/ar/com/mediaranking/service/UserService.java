@@ -7,4 +7,6 @@ public interface UserService {
 
     UserResponse register(UserRequest userRequest);
 
+    void deleteUserById(Long id);
+
 }
