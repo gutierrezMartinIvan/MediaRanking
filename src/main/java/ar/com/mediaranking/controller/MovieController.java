@@ -34,21 +34,7 @@ public class MovieController {
     private MovieService service;
 
     @Operation(
-            summary = "Get movies",
-            description = "This feature lets all get all movies information."
-    )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Movies found successfully!")
-            })
-    //@SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping
-    public ResponseEntity<List<MovieResponse>> getMovies() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
-    @Operation(
-            summary = "Get movies by filters",
+            summary = "Get all movies with filters",
             description = "In this feature you can look up for a movie by its tittle, director, genres, year or the max or min duration"
     )
     @ApiResponses(
@@ -57,15 +43,15 @@ public class MovieController {
             }
     )
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping("/filter")
-    public ResponseEntity<List<MovieResponse>> getMoviesFilter(@RequestParam(required = false) String title,
+    @GetMapping
+    public ResponseEntity<List<MovieResponse>> getAll(@RequestParam(required = false) String title,
                                                                @RequestParam(required = false) String director,
                                                                @RequestParam(required = false) Set<String> genres,
                                                                @RequestParam(required = false) Integer year,
                                                                @RequestParam(required = false) Integer minDuration,
                                                                @RequestParam(required = false) Integer maxDuration
     ){
-        List<MovieResponse> movie = service.findByFilter(title, director, year, minDuration, maxDuration, genres);
+        List<MovieResponse> movie = service.findAll(title, director, year, minDuration, maxDuration, genres);
         return ResponseEntity.ok(movie);
     }
 

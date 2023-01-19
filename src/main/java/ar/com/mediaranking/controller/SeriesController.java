@@ -31,35 +31,21 @@ import java.util.Set;
 public class SeriesController {
     @Autowired
     private ISeriesService seriesService;
-
     @Operation(
-            summary = "Get all series",
-            description = "This feature lets all get all series.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Series found successfully!")
-            })
-    @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping()
-    public ResponseEntity<List<SeriesResponse>> getAllSeries() {
-        return ResponseEntity.ok(seriesService.getAll());
-    }
-
-    @Operation(
-            summary = "Get series by filters",
+            summary = "Get all series with filters",
             description = "In this feature you can look up for a series by its tittle, author, genres or year")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Series found successfully!")
             })
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping("/filter")
-    public ResponseEntity<List<SeriesResponse>> getSeriesByFilters(@RequestParam(required = false) String title,
+    @GetMapping
+    public ResponseEntity<List<SeriesResponse>> getAll(@RequestParam(required = false) String title,
                                                                    @RequestParam(required = false) String author,
                                                                    @RequestParam(required = false) Set<String> genres,
                                                                    @RequestParam(required = false) Integer year
     ) {
-        return ResponseEntity.ok(seriesService.getByFilters(title, author, genres, year));
+        return ResponseEntity.ok(seriesService.getAll(title, author, genres, year));
     }
 
     @Operation(

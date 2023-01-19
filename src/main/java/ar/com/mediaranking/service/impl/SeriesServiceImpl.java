@@ -53,18 +53,13 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
-    public List<SeriesResponse> getAll() {
-        return mapper.convertSeriesToDto(repository.findAll());
-    }
-
-    @Override
     public SeriesResponse getSerieById(Long id) {
         return mapper.convertEntityToDto(repository.findById(id).
                 orElseThrow(() -> new NotFoundException("There is not a series with the id: " + id)));
     }
 
     @Override
-    public List<SeriesResponse> getByFilters(String tittle, String author, Set<String> genres, Integer year) {
+    public List<SeriesResponse> getAll(String tittle, String author, Set<String> genres, Integer year) {
         SeriesFilter seriesFilter = new SeriesFilter(tittle, author, year, genres);
         List<SeriesEntity> entities = repository.findAll(SeriesSpecification.getByFilters(seriesFilter));
         List<SeriesResponse> responses = mapper.convertSeriesToDto(entities);

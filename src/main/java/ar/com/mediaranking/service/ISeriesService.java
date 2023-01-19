@@ -11,11 +11,9 @@ public interface ISeriesService {
 
     SeriesResponse save(SeriesRequest request);
 
-    List<SeriesResponse> getAll();
-
     SeriesResponse getSerieById(Long id);
 
-    List<SeriesResponse> getByFilters(String tittle, String author, Set<String> genres, Integer year);
+    List<SeriesResponse> getAll(String tittle, String author, Set<String> genres, Integer year);
 
     void deleteSerieById(Long id);
 

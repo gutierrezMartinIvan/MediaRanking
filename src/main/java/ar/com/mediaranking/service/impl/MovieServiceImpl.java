@@ -63,11 +63,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponse> findAll() {
-        return mapper.convertMoviesToDto(repository.findAll());
-    }
-
-    @Override
     public void deleteById(long id){
         try {
             repository.deleteById(id);
@@ -110,7 +105,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
 
-    public List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
+    public List<MovieResponse> findAll(String title, String director, Integer year, Integer minDuration, Integer maxDuration, Set<String> genres){
         MovieFilter filter = new MovieFilter(title, director, year, minDuration, maxDuration, genres);
         List<MovieEntity> entities = repository.findAll(MovieSpecification.getByFilters(filter));
 

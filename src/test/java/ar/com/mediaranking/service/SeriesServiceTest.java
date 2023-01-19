@@ -7,7 +7,6 @@ import ar.com.mediaranking.models.entity.GenreEntity;
 import ar.com.mediaranking.models.entity.SeasonEntity;
 import ar.com.mediaranking.models.entity.SeriesEntity;
 import ar.com.mediaranking.models.repository.ISeriesRepository;
-import ar.com.mediaranking.models.request.SeasonRequest;
 import ar.com.mediaranking.models.request.SeasonSeriesRequest;
 import ar.com.mediaranking.models.request.SeriesRequest;
 import ar.com.mediaranking.models.request.SeriesUpdate;
@@ -52,25 +51,6 @@ public class SeriesServiceTest {
     @InjectMocks
     private SeriesServiceImpl service;
 
-    @Test
-    void getAllReturnAllSeries() {
-        List<SeriesEntity> series = List.of(
-                new SeriesEntity(1L,"Series 1","Desc 1","Author 1",2022, Set.of(GenreEntity.builder().name("Action").build()),null,null),
-                new SeriesEntity(2L,"Series 2","Desc 2","Author 2",2023, Set.of(GenreEntity.builder().name("Sci-Fi").build()),null,null)
-        );
-        List<SeriesResponse> seriesResponse = List.of(
-                new SeriesResponse(1L,"Series 1","Desc 1","Author 1",2022, List.of("Action"),List.of(new SeasonResponse())),
-                new SeriesResponse(2L,"Series 2","Desc 2","Author 2",2023, List.of("Sci-Fi"),List.of(new SeasonResponse()))
-        );
-        given(repository.findAll()).willReturn(series);
-        given(mapper.convertSeriesToDto(series)).willReturn(seriesResponse);
-
-        List<SeriesResponse> result = service.getAll();
-
-        assert result.size() == 2;
-        assert result.equals(seriesResponse);
-        verify(repository, Mockito.times(1)).findAll();
-    }
 
     @Test
     void getByIdReturnsSeries(){
@@ -106,7 +86,7 @@ public class SeriesServiceTest {
         given(repository.findAll(any(Specification.class))).willReturn(series);
         given(mapper.convertSeriesToDto(series)).willReturn(seriesResponse);
 
-        List<SeriesResponse> result = service.getByFilters("Series","Author",null,null);
+        List<SeriesResponse> result = service.getAll("Series","Author",null,null);
 
         assert result.size() == 2;
         assert result.equals(seriesResponse);
