@@ -55,6 +55,9 @@ public class UserServiceImpl implements UserService {
         return mapper.convertEntityToDto(userRepository.save(user));
     }
 
+    public Optional<UserEntity> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
 
 }
