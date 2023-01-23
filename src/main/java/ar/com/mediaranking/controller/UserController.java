@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
+
 @RestController
 @RequestMapping("/user")
 @Tag(
@@ -35,11 +37,17 @@ public class UserController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "201", description = "User created successfully!"),
+                    @ApiResponse(responseCode = "400", description = "User already exists",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
     @PutMapping
     public ResponseEntity<TokenResponse> registerUser(@Valid @RequestBody UserDataRequest userDataRequest) {
-        return new ResponseEntity<>(userService.register(userDataRequest), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(userService.register(userDataRequest), HttpStatus.CREATED);
+        } catch(Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(
@@ -48,12 +56,19 @@ public class UserController {
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Login successfully!"),
+                    @ApiResponse(responseCode = "200", description = "Logged in successfully!"),
+                    @ApiResponse(responseCode = "400", description = "Email or password are incorrect",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
     @PostMapping
     public ResponseEntity<TokenResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
-        return new ResponseEntity<>(userService.login(loginRequest), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(userService.login(loginRequest), HttpStatus.OK);
+        } catch(Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @Operation(

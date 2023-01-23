@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final String SECRET_KEY = "4B614E645267556B58703273357638792F423F4528482B4D6251655368566D59";
-    private static final Integer TOKEN_DURATION_MILLIS = 1000 * 60 * 60 * 24;
+    private static final Integer TOKEN_DURATION_MILLIS = 1000 * 60 * 60 * 2;
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);

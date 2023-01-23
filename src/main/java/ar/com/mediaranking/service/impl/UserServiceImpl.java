@@ -1,6 +1,7 @@
 package ar.com.mediaranking.service.impl;
 
 import ar.com.mediaranking.config.security.JwtService;
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.Role;
 import ar.com.mediaranking.models.entity.UserEntity;
@@ -14,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.rmi.AlreadyBoundException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -34,7 +38,11 @@ public class UserServiceImpl implements UserService {
     @Lazy
     private PasswordEncoder passwordEncoder;
 
-    public TokenResponse register(UserDataRequest userDataRequest) {
+    public TokenResponse register(UserDataRequest userDataRequest) throws AlreadyExistsException {
+
+        if(userRepository.findByEmail(userDataRequest.getEmail()).isPresent()) {
+            throw new AlreadyExistsException("A user with that email already exists");
+        }
 
         UserEntity user = UserEntity
                 .builder()
@@ -52,7 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenResponse login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest) throws AuthenticationException, NoSuchElementException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
@@ -64,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         Optional<UserEntity> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty())
+        if(userOptional.isEmpty())
             throw new NotFoundException("There is not a user with the id: " + id);
         userRepository.deleteById(id);
     }

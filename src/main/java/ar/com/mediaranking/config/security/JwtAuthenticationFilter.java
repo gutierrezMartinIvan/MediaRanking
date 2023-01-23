@@ -33,19 +33,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if(authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            logger.error("First if");
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(JWT_START_POINT);
 
         if(jwt.isEmpty()) {
-            logger.error("Second if");
             filterChain.doFilter(request, response);
             return;
         }
 
-        logger.error("First before jwt");
         userEmail = jwtService.extractUsername(jwt);
 
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
