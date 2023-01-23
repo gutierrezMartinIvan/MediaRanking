@@ -1,22 +1,16 @@
-package ar.com.mediaranking.models.response;
+package ar.com.mediaranking.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserResponse {
-
-    @Schema(example = "1")
-    private Long id;
+public class UserDataRequest {
 
     @Schema(example = "Email")
     private String email;
+
+    @Schema(example = "Password")
+    private String password;
 
     @Schema(example = "First Name")
     private String firstName;

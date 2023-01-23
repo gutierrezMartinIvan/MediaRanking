@@ -1,19 +1,21 @@
 package ar.com.mediaranking.service;
 
 import ar.com.mediaranking.models.entity.UserEntity;
-import ar.com.mediaranking.models.request.UserRequest;
-import ar.com.mediaranking.models.request.UserUpdate;
-import ar.com.mediaranking.models.response.UserResponse;
+import ar.com.mediaranking.models.request.LoginRequest;
+import ar.com.mediaranking.models.request.UserDataRequest;
+import ar.com.mediaranking.models.response.TokenResponse;
 
 import java.util.Optional;
 
 public interface UserService {
 
-    UserResponse register(UserRequest userRequest);
+    TokenResponse register(UserDataRequest userDataRequest);
+
+    TokenResponse login(LoginRequest loginRequest);
 
     void deleteUserById(Long id);
 
-    UserResponse update(Long id, UserUpdate UserRequest);
+    void update(Long id, UserDataRequest userDataRequest);
 
     Optional<UserEntity> findUserByEmail(String email);
 

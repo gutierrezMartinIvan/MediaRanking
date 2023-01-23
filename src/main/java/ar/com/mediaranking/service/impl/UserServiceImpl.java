@@ -1,58 +1,90 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.config.security.JwtService;
 import ar.com.mediaranking.exception.NotFoundException;
+import ar.com.mediaranking.models.entity.Role;
 import ar.com.mediaranking.models.entity.UserEntity;
 import ar.com.mediaranking.models.repository.UserRepository;
-import ar.com.mediaranking.models.request.UserRequest;
-import ar.com.mediaranking.models.request.UserUpdate;
-import ar.com.mediaranking.models.response.UserResponse;
+import ar.com.mediaranking.models.request.LoginRequest;
+import ar.com.mediaranking.models.request.UserDataRequest;
+import ar.com.mediaranking.models.response.TokenResponse;
 import ar.com.mediaranking.service.UserService;
-import ar.com.mediaranking.utils.DtoToEntityConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final UserRepository userRepository;
     @Autowired
-    private UserRepository userRepository;
-
+    @Lazy
+    private JwtService jwtService;
     @Autowired
-    private DtoToEntityConverter mapper;
+    @Lazy
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
 
-    public UserResponse register(UserRequest userRequest) {
-        UserEntity userEntity = mapper.convertDtoToEntity(userRequest);
+    public TokenResponse register(UserDataRequest userDataRequest) {
 
-        return mapper.convertEntityToDto(userRepository.save(userEntity));
+        UserEntity user = UserEntity
+                .builder()
+                .email(userDataRequest.getEmail())
+                .password(passwordEncoder.encode(userDataRequest.getPassword()))
+                .firstName(userDataRequest.getFirstName())
+                .lastName(userDataRequest.getLastName())
+                .role(Role.USER)
+                .build();
+
+        userRepository.save(user);
+
+        var jwt = jwtService.generateToken(user);
+        return TokenResponse.builder().token(jwt).build();
+    }
+
+    @Override
+    public TokenResponse login(LoginRequest loginRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+
+        var jwt = jwtService.generateToken(user);
+        return TokenResponse.builder().token(jwt).build();
     }
 
     @Override
     public void deleteUserById(Long id) {
         Optional<UserEntity> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent())
+        if (userOptional.isEmpty())
             throw new NotFoundException("There is not a user with the id: " + id);
         userRepository.deleteById(id);
     }
 
     @Override
-    public UserResponse update(Long id, UserUpdate userRequest) {
+    public void update(Long id, UserDataRequest userDataRequest) {
         UserEntity user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " not found"));
 
-        if(userRequest.getFirstName() != null) {
-            user.setFirstName(userRequest.getFirstName());
+        if(userDataRequest.getEmail() != null) {
+            user.setFirstName(userDataRequest.getEmail());
         }
-        if(userRequest.getEmail() != null) {
-            user.setFirstName(userRequest.getEmail());
+        if(userDataRequest.getPassword() != null) {
+            user.setFirstName(userDataRequest.getPassword());
         }
-        if(userRequest.getLastName() != null) {
-            user.setFirstName(userRequest.getLastName());
+        if(userDataRequest.getLastName() != null) {
+            user.setFirstName(userDataRequest.getLastName());
         }
-        if(userRequest.getPassword() != null) {
-            user.setFirstName(userRequest.getPassword());
+        if(userDataRequest.getFirstName() != null) {
+            user.setFirstName(userDataRequest.getFirstName());
         }
-        return mapper.convertEntityToDto(userRepository.save(user));
     }
 
     public Optional<UserEntity> findUserByEmail(String email) {

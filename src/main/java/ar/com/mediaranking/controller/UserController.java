@@ -1,8 +1,9 @@
 package ar.com.mediaranking.controller;
 
-import ar.com.mediaranking.models.request.UserRequest;
+import ar.com.mediaranking.models.request.LoginRequest;
+import ar.com.mediaranking.models.request.UserDataRequest;
 import ar.com.mediaranking.models.response.ApiErrorResponse;
-import ar.com.mediaranking.models.response.UserResponse;
+import ar.com.mediaranking.models.response.TokenResponse;
 import ar.com.mediaranking.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,10 +37,25 @@ public class UserController {
                     @ApiResponse(responseCode = "201", description = "User created successfully!"),
             }
     )
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRequest userRequest) {
-        return new ResponseEntity<>(userService.register(userRequest), HttpStatus.CREATED);
+    @PutMapping
+    public ResponseEntity<TokenResponse> registerUser(@Valid @RequestBody UserDataRequest userDataRequest) {
+        return new ResponseEntity<>(userService.register(userDataRequest), HttpStatus.CREATED);
     }
+
+    @Operation(
+            summary = "Login",
+            description = "In this feature you can login with your user"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Login successfully!"),
+            }
+    )
+    @PostMapping("")
+    public ResponseEntity<TokenResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        return new ResponseEntity<>(userService.login(loginRequest), HttpStatus.OK);
+    }
+
     @Operation(
             summary = "Delete user by ID",
             description = "In this feature you can delete a user by ID"
@@ -51,8 +67,24 @@ public class UserController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
-    @DeleteMapping("{id}")
-    public void deleteSeriesById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
+    }
+
+    @Operation(
+            summary = "Update user by ID",
+            description = "In this feature you can update a user information by ID"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "User updated successfully!"),
+                    @ApiResponse(responseCode = "404", description = "User not found!",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
+    @PostMapping("/{id}")
+    public void updateUserById(@PathVariable Long id, @Valid @RequestBody UserDataRequest userDataRequest) {
+        userService.update(id, userDataRequest);
     }
 }
