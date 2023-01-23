@@ -51,7 +51,7 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Login successfully!"),
             }
     )
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<TokenResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(userService.login(loginRequest), HttpStatus.OK);
     }
