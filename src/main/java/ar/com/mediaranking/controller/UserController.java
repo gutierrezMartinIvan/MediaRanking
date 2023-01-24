@@ -41,7 +41,7 @@ public class UserController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
-    @PutMapping
+    @PostMapping
     public ResponseEntity<TokenResponse> registerUser(@Valid @RequestBody UserDataRequest userDataRequest) {
         try {
             return new ResponseEntity<>(userService.register(userDataRequest), HttpStatus.CREATED);
@@ -61,7 +61,7 @@ public class UserController {
                             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<TokenResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             return new ResponseEntity<>(userService.login(loginRequest), HttpStatus.OK);
