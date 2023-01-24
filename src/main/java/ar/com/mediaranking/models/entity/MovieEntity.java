@@ -10,6 +10,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "movies")
+@Builder
 @Getter
 @Setter
 @ToString
@@ -30,11 +31,11 @@ public class MovieEntity {
     @Column(nullable = false)
     String director;
 
-    @Column(nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "movies_genres",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @ToString.Exclude
     private Set<GenreEntity> genres = new HashSet<>();
 
     @Column(nullable = false)
@@ -48,7 +49,7 @@ public class MovieEntity {
     Integer  year;
 
 
-    @OneToMany(mappedBy = "movies", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "movies", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     List<ReviewEntity> reviews = new ArrayList<>();
 
@@ -57,7 +58,7 @@ public class MovieEntity {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         MovieEntity movie = (MovieEntity) o;
-        return Objects.equals(id, movie.id);
+        return Objects.equals(id, movie.id) && Objects.equals(title, movie.title) && Objects.equals(description, movie.description) && Objects.equals(director, movie.director) && Objects.equals(genres, movie.genres) && Objects.equals(duration, movie.duration) && Objects.equals(year, movie.year) && Objects.equals(reviews, movie.reviews);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ar.com.mediaranking.service.impl;
 
+import ar.com.mediaranking.exception.AlreadyExistsException;
 import ar.com.mediaranking.exception.NotFoundException;
 import ar.com.mediaranking.models.entity.MovieEntity;
 import ar.com.mediaranking.models.entity.ReviewEntity;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.rmi.AlreadyBoundException;
 import java.util.List;
 
 @Service
@@ -81,8 +83,11 @@ public class ReviewServiceImpl implements IReviewService {
     @Override
     public ReviewResponse createReviewForMovie(ReviewRequest review) {
         MovieEntity movie = movieRepository.findById(review.getEntityId()).orElseThrow(() -> new NotFoundException("Movie with id: " + review.getEntityId() + " not found"));
-        ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
+        repository.findByUserIdAndMovies(review.getUserId(), movie).ifPresent(reviewEntity -> {
+            throw new AlreadyExistsException("User already reviewed this movie");
+        });
 
+        ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
         reviewEntity.setMovies(movie);
         movie.getReviews().add(reviewEntity);
 
@@ -93,6 +98,10 @@ public class ReviewServiceImpl implements IReviewService {
     @Override
     public ReviewResponse createReviewForSeries(ReviewRequest review) {
         SeriesEntity series = seriesRepository.findById(review.getEntityId()).orElseThrow(() -> new NotFoundException("Series with id: " + review.getEntityId() + " not found"));
+        repository.findByUserIdAndSeries(review.getUserId(), series).ifPresent(reviewEntity -> {
+            throw new AlreadyExistsException("User already reviewed this movie");
+        });
+
         ReviewEntity reviewEntity = mapper.convertDtoToEntity(review);
 
         reviewEntity.setSeries(series);

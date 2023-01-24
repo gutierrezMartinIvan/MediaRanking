@@ -8,11 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface MovieService {
-    boolean isNull(MovieRequest request);
 
-    MovieResponse save(MovieRequest request) /*throws NameOrContentAreNull*/;
-
-    List<MovieResponse> findAll();
+    MovieResponse save(MovieRequest request);
 
     void deleteById(long id);
 
@@ -20,7 +17,7 @@ public interface MovieService {
 
     MovieResponse update(long id, MovieUpdate movie);
 
-    List<MovieResponse> findByFilter(String title, String director,Integer year, Integer minDuration, Integer maxDuration, Set<String> genres);
+    List<MovieResponse> findAll(String title, String director, Integer year, Integer minDuration, Integer maxDuration, Set<String> genres);
 
     List<MovieResponse> saveList(List<MovieRequest> movieList);
 }

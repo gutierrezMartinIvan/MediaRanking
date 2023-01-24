@@ -31,18 +31,8 @@ public class SeriesServiceImpl implements ISeriesService {
     private DtoToEntityConverter mapper;
 
     @Autowired
-    private SeriesSpecification seriesSpecification;
-
-    @Autowired
-    private IReviewService reviewService;
-
-    @Autowired
     private SeasonService seasonService;
 
-    @Override
-    public boolean isNull(SeriesRequest request) {
-        return false;
-    }
 
     @Override
     public SeriesResponse save(SeriesRequest request) {
@@ -59,12 +49,7 @@ public class SeriesServiceImpl implements ISeriesService {
             for (SeasonEntity season : entitySave.getSeasons())
                 seasonService.save(season, entitySave);
         }
-        return mapper.convertEntityToDto(repository.save(entitySave));
-    }
-
-    @Override
-    public List<SeriesResponse> getAll() {
-        return mapper.convertSeriesToDto(repository.findAll());
+        return mapper.convertEntityToDto(entitySave);
     }
 
     @Override
@@ -74,19 +59,20 @@ public class SeriesServiceImpl implements ISeriesService {
     }
 
     @Override
-    public List<SeriesResponse> getByFilters(String tittle, String author, Set<String> genres, Integer year) {
+    public List<SeriesResponse> getAll(String tittle, String author, Set<String> genres, Integer year) {
         SeriesFilter seriesFilter = new SeriesFilter(tittle, author, year, genres);
-        List<SeriesEntity> entities = repository.findAll(seriesSpecification.getByFilters(seriesFilter));
+        List<SeriesEntity> entities = repository.findAll(SeriesSpecification.getByFilters(seriesFilter));
         List<SeriesResponse> responses = mapper.convertSeriesToDto(entities);
         return responses;
     }
 
     @Override
     public void deleteSerieById(Long id) {
-        Optional<SeriesEntity> seriesOptional = repository.findById(id);
-        if (!seriesOptional.isPresent())
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
             throw new NotFoundException("There is not a series with the id: " + id);
-        repository.deleteById(id);
+        }
     }
 
     @Override

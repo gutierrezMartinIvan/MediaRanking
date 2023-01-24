@@ -33,7 +33,13 @@ public class SeriesRequest {
     Integer year;
 
     @NotNull(message = "Genres can not be null")
-    @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
+    @Schema(description = "Series genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]",
+            allowableValues = {
+                    "ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY", "CRIME",
+                    "DOCUMENTARY", "DRAMA", "FAMILY", "FANTASY", "FILM_NOIR", "HISTORY",
+                    "HORROR", "MUSIC", "MUSICAL", "MYSTERY", "ROMANCE", "SCI_FI", "SPORT",
+                    "THRILLER", "WAR", "WESTERN"}
+    )
     Set<String> genres = new HashSet<>();
 
     @Schema(description = "Series seasons, this field is optional")

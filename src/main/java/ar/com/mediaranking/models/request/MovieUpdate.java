@@ -3,12 +3,14 @@ package ar.com.mediaranking.models.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
 public class MovieUpdate {
     @Schema(description = "Movie title", example = "Spider-Man: Into the Spider-Verse")
     String title;
@@ -19,7 +21,13 @@ public class MovieUpdate {
     @Schema(description = "Movie director",example = "Bob Persichetti")
     String director;
 
-    @Schema(description = "Movie genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]")
+    @Schema(description = "Movie genres",example = "[\"Action\",\"Adventure\",\"Animation\",\"Comedy\",\"Family\",\"Sci-Fi\"]",
+            allowableValues = {
+                    "ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY", "CRIME",
+                    "DOCUMENTARY", "DRAMA", "FAMILY", "FANTASY", "FILM_NOIR", "HISTORY",
+                    "HORROR", "MUSIC", "MUSICAL", "MYSTERY", "ROMANCE", "SCI_FI", "SPORT",
+                    "THRILLER", "WAR", "WESTERN"}
+    )
     private Set<String> genres = new HashSet<>();
 
     @Min(value=1)

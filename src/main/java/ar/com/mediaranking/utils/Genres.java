@@ -24,6 +24,7 @@ public enum Genres {
     WAR,
     WESTERN;
 
+
     public String getDisplayName() {
         return switch (this) {
             case SCI_FI -> "SCI-FI";
