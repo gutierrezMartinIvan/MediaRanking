@@ -19,7 +19,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.rmi.AlreadyBoundException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -97,6 +96,13 @@ public class UserServiceImpl implements UserService {
 
     public Optional<UserEntity> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public void grantAdmin(Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " not found"));
+        user.setRole(Role.ADMIN);
+        userRepository.save(user);
     }
 
 

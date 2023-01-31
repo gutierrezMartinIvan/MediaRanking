@@ -21,11 +21,50 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/logs").permitAll()
-                .and().authorizeHttpRequests().requestMatchers(HttpMethod.PUT, "/user").permitAll()
+                .authorizeHttpRequests().requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/reviews/series").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/reviews/movie").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/reviews/user").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/reviews/series").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/reviews/movie").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.PATCH, "/reviews/*").authenticated()
+
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/movies").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/movies/*").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE, "/movies").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/movies").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/movies/list").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.PATCH, "/movies/*").authenticated()
+
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/series").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/series/*").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE, "/series/*").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/series").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.PATCH, "/series/*").authenticated()
+
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/episode").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/episode/*").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE, "/episode/*").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/episode").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/episode/save/list").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.PATCH, "/episode/*").authenticated()
+
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/season").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/season/*").permitAll()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE, "/season/*").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/season").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/season/list").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.PATCH, "/season/*").authenticated()
+
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/user").permitAll()
-                .anyRequest().authenticated()
+                //.and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/user/*/admin").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE, "/user").authenticated()
+                .and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/user/*").authenticated()
+
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -10,9 +10,9 @@ public class LoggingController {
 
     Logger logger = LoggerFactory.getLogger(LoggingController.class);
 
-    @RequestMapping("/logs")
+    /*@RequestMapping("/logs")
     public String index() {
 
         return "Howdy! Check out the Logs to see the output...";
-    }
+    }*/
 }

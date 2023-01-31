@@ -19,4 +19,6 @@ public interface UserService {
 
     Optional<UserEntity> findUserByEmail(String email);
 
+    void grantAdmin(Long id);
+
 }

@@ -102,4 +102,20 @@ public class UserController {
     public void updateUserById(@PathVariable Long id, @Valid @RequestBody UserDataRequest userDataRequest) {
         userService.update(id, userDataRequest);
     }
+
+    /*@Operation(
+            summary = "Grant Admin role to user",
+            description = "In this feature you grant admin role to a user by his idd"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Success!"),
+                    @ApiResponse(responseCode = "400", description = "User doesn't exist",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+            }
+    )
+    @PostMapping("/{id}/admin")
+    public void grantAdminById(@PathVariable Long id) {
+        userService.grantAdmin(id);
+    }*/
 }
